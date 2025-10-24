@@ -1,0 +1,19 @@
+# This is a Databricks asset bundle definition for AI-Agent-Portfolio-Analysis.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: AI-Agent-Portfolio-Analysis
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-8b4b07b5-233c.cloud.databricks.com
+
+  ## Optionally, there could be 'staging' or 'prod' targets here.
+  #
+  # prod:
+  #   workspace:
+  #     host: https://dbc-8b4b07b5-233c.cloud.databricks.com
