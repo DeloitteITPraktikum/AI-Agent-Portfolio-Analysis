@@ -39,62 +39,6 @@ function App() {
             </button>
           </div>
 
-          {/* Portfolios */}
-          <div className="nav-section">
-            <button className="nav-header" data-target="portfolio-items">
-              <span className="nav-left">
-                <span className="nav-icon">
-                  <img src="/img/icons/portfolios.png" alt="" />
-                </span>
-                <span className="nav-label">Portfolios</span>
-              </span>
-              <span className="nav-header-icon">▾</span>
-            </button>
-
-            <div className="nav-items" id="portfolio-items">
-              <a href="/pages/portfolios.html">Portfolio-Übersicht</a>
-              <a href="/pages/portfolios.html">CSV-Upload</a>
-            </div>
-          </div>
-
-          {/* Kennzahlen & Analyse */}
-          <div className="nav-section">
-            <button className="nav-header" data-target="analytics-items">
-              <span className="nav-left">
-                <span className="nav-icon">
-                  <img src="/img/icons/analytics.png" alt="" />
-                </span>
-                <span className="nav-label">Kennzahlen & Analyse</span>
-              </span>
-              <span className="nav-header-icon">▾</span>
-            </button>
-
- <div className="nav-items" id="analytics-items">
-  <a className="nav-subitem" href="/pages/rendite.html">Rendite</a>
-  <a className="nav-subitem" href="/pages/volatilitaet.html">Volatilität</a>
-  <a className="nav-subitem" href="/pages/standardabweichung.html">Standardabweichung</a>
-  <a className="nav-subitem" href="/pages/risikofreie-rendite.html">Risikofreie Rendite</a>
-  <a className="nav-subitem" href="/pages/charts.html">Charts</a>
-</div>
-
-          </div>
-
-          {/* Daten & APIs */}
-          <div className="nav-section">
-            <button className="nav-header" data-target="data-items">
-              <span className="nav-left">
-                <span className="nav-icon">
-                  <img src="/img/icons/data-apis.png" alt="" />
-                </span>
-                <span className="nav-label">Daten & APIs</span>
-              </span>
-              <span className="nav-header-icon">▾</span>
-            </button>
-
-            <div className="nav-items" id="data-items">
-              <a href="/pages/data.html">Datenquellen</a>
-            </div>
-          </div>
 
           {/* KI Agent */}
           <div className="nav-section">
@@ -175,13 +119,6 @@ function App() {
           <div className="card news-card">
             <h2>Aktuelles aus der Finanzwelt</h2>
             <p className="news-text">Aktuelles aus der Finanzwelt...</p>
-          </div>
-
-          {/* Chat */}
-          <div className="card chat-card">
-            <h2>AI Analyst</h2>
-            <textarea placeholder="Wie kann ich helfen?" className="chat-input"></textarea>
-            <button className="btn-send">Senden</button>
           </div>
 
         </section>
