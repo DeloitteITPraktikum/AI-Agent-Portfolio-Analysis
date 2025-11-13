@@ -1,0 +1,110 @@
+/* layout.css
+   - Grundlayout der Seite
+   - App-Rahmen, Sidebar, Hauptbereich
+*/
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar links */
+.sidebar {
+  width: 260px;
+  background-color: #0d0d0d; /* sehr dunkles Grau/Schwarz */
+  color: #ffffff;
+  padding: 24px;
+}
+
+/* Hauptbereich rechts */
+.main {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 24px 32px;
+}
+
+/* Header im Hauptbereich */
+.main-header {
+  margin-bottom: 24px;
+}
+
+.main-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.main-subtitle {
+  font-size: 14px;
+  color: #64748b; /* graublau */
+}
+
+/* Platzhalter für späteren Inhalt */
+.main-content {
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5f5;
+  font-size: 14px;
+  color: #475569;
+}
+/* components.css
+   - einzelne Bausteine wie Karten, Buttons, Kacheln
+*/
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+/* Navigationsbereich in der Sidebar */
+.nav-section {
+  margin-top: 16px;
+}
+
+.nav-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.nav-header-icon {
+  margin-left: 8px;
+}
+
+.nav-items {
+  margin-left: 12px;
+  margin-top: 4px;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+.nav-items p {
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+.nav-items p:hover {
+  color: #86bc25; /* grün beim Hover */
+}
+
+/* allgemeine Utility-Klasse */
+.hidden {
+  display: none;
+}
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+}
+

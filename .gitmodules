@@ -1,0 +1,6 @@
+[submodule "DeloVest"]
+	path = DeloVest
+	url = https://github.com/Tawsirul/DeloVest.git
+[submodule "frontend/DeloVest"]
+	path = frontend/DeloVest
+	url = https://github.com/Tawsirul/DeloVest.git
