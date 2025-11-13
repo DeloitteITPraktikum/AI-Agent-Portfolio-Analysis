@@ -32,3 +32,6 @@ function initSidebar() {
 
 // Script steht am Ende des <body>, DOM ist schon da:
 initSidebar();
+
+
+

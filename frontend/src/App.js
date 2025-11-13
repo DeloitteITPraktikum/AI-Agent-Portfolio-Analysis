@@ -3,10 +3,9 @@ import './styles/components.css';
 import './styles/layout.css';
 import { useEffect } from 'react';
 
-
 function App() {
   useEffect(() => {
-    // Deine bestehenden JS-Dateien laden (z. B. Sidebar-Logik)
+    // Sidebar & Main Scripts (Dropdowns etc.)
     const sidebarScript = document.createElement('script');
     sidebarScript.src = '/js/sidebar.js';
     document.body.appendChild(sidebarScript);
@@ -18,16 +17,19 @@ function App() {
 
   return (
     <div className="app">
+
       {/* Sidebar */}
       <aside className="sidebar">
+
         <div className="logo">
           <img src="/img/delovest-logo.png" alt="DeloVest Logo" className="logo-img" />
         </div>
 
         <nav className="sidebar-nav">
+
           {/* Dashboard */}
           <div className="nav-section">
-            <button className="nav-header nav-header-single active" id="nav-dashboard">
+<button className="nav-header nav-header-single active" id="nav-dashboard">
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/dashboard.png" alt="" />
@@ -48,9 +50,10 @@ function App() {
               </span>
               <span className="nav-header-icon">▾</span>
             </button>
+
             <div className="nav-items" id="portfolio-items">
-              <p>Portfolio-Übersicht</p>
-              <p>CSV-Upload</p>
+              <a href="/pages/portfolios.html">Portfolio-Übersicht</a>
+              <a href="/pages/portfolios.html">CSV-Upload</a>
             </div>
           </div>
 
@@ -65,13 +68,15 @@ function App() {
               </span>
               <span className="nav-header-icon">▾</span>
             </button>
-            <div className="nav-items" id="analytics-items">
-              <p>Rendite</p>
-              <p>Volatilität</p>
-              <p>Standardabweichung</p>
-              <p>Risikofreie Rendite</p>
-              <p>Charts</p>
-            </div>
+
+ <div className="nav-items" id="analytics-items">
+  <a className="nav-subitem" href="/pages/rendite.html">Rendite</a>
+  <a className="nav-subitem" href="/pages/volatilitaet.html">Volatilität</a>
+  <a className="nav-subitem" href="/pages/standardabweichung.html">Standardabweichung</a>
+  <a className="nav-subitem" href="/pages/risikofreie-rendite.html">Risikofreie Rendite</a>
+  <a className="nav-subitem" href="/pages/charts.html">Charts</a>
+</div>
+
           </div>
 
           {/* Daten & APIs */}
@@ -85,57 +90,61 @@ function App() {
               </span>
               <span className="nav-header-icon">▾</span>
             </button>
+
             <div className="nav-items" id="data-items">
-              <p>Datenquellen</p>
+              <a href="/pages/data.html">Datenquellen</a>
             </div>
           </div>
 
           {/* KI Agent */}
           <div className="nav-section">
-            <button className="nav-header nav-header-single" id="nav-agent">
+            <a href="/pages/agent.html" className="nav-header nav-header-single">
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/agent.png" alt="" />
                 </span>
                 <span className="nav-label">KI Agent</span>
               </span>
-            </button>
+            </a>
           </div>
 
           {/* Reports */}
           <div className="nav-section">
-            <button className="nav-header nav-header-single" id="nav-reports">
+            <a href="/pages/reports.html" className="nav-header nav-header-single">
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/reports.png" alt="" />
                 </span>
                 <span className="nav-label">Reports & Exports</span>
               </span>
-            </button>
+            </a>
           </div>
 
           {/* Einstellungen */}
           <div className="nav-section">
-            <button className="nav-header nav-header-single" id="nav-settings">
+            <a href="/pages/settings.html" className="nav-header nav-header-single">
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/settings.png" alt="" />
                 </span>
                 <span className="nav-label">Einstellungen & Dokumentation</span>
               </span>
-            </button>
+            </a>
           </div>
+
         </nav>
       </aside>
 
-      {/* Hauptbereich */}
+      {/* Hauptbereich (Dashboard bleibt wie vorher) */}
       <main className="main">
+
         <header className="main-header">
           <h1>Portfolio Dashboard</h1>
           <p className="main-subtitle">Überblick über Performance & Risiko-Kennzahlen</p>
         </header>
 
         <section className="dashboard-grid">
+
           {/* CSV Upload */}
           <div className="card upload-card">
             <h2>CSV-Upload</h2>
@@ -150,7 +159,7 @@ function App() {
           <div className="card stat-card"><h3>Standardabweichung</h3><p className="stat-value">0 %</p></div>
           <div className="card stat-card"><h3>Risikofreie Rendite</h3><p className="stat-value">0 %</p></div>
 
-          {/* Widget */}
+          {/* Widget Slot */}
           <div className="card widget-slot">
             <div className="widget-plus">+</div>
             <p className="widget-text">Widget hinzufügen</p>
@@ -174,6 +183,7 @@ function App() {
             <textarea placeholder="Wie kann ich helfen?" className="chat-input"></textarea>
             <button className="btn-send">Senden</button>
           </div>
+
         </section>
       </main>
     </div>
@@ -181,4 +191,8 @@ function App() {
 }
 
 export default App;
+
+
+
+
 

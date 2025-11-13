@@ -1,7 +1,6 @@
-/* layout.css
-   - Grundlayout der Seite
-   - App-Rahmen, Sidebar, Hauptbereich
-*/
+/* ------------------------------- */
+/*   L A Y O U T   B A S I S       */
+/* ------------------------------- */
 
 .app {
   display: flex;
@@ -11,7 +10,7 @@
 /* Sidebar links */
 .sidebar {
   width: 260px;
-  background-color: #0d0d0d; /* sehr dunkles Grau/Schwarz */
+  background-color: #0d0d0d;
   color: #ffffff;
   padding: 24px;
 }
@@ -23,7 +22,6 @@
   padding: 24px 32px;
 }
 
-/* Header im Hauptbereich */
 .main-header {
   margin-bottom: 24px;
 }
@@ -36,10 +34,10 @@
 
 .main-subtitle {
   font-size: 14px;
-  color: #64748b; /* graublau */
+  color: #64748b;
 }
 
-/* Platzhalter für späteren Inhalt */
+/* Content Platzhalter */
 .main-content {
   border-radius: 12px;
   padding: 16px;
@@ -48,9 +46,23 @@
   font-size: 14px;
   color: #475569;
 }
-/* components.css
-   - einzelne Bausteine wie Karten, Buttons, Kacheln
-*/
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+}
+
+/* ------------------------------- */
+/*   S I D E B A R   N A V I       */
+/* ------------------------------- */
+
+/* Alles weiß */
+.sidebar,
+.sidebar * {
+  color: #ffffff;
+}
 
 .logo {
   font-size: 24px;
@@ -58,16 +70,19 @@
   margin-bottom: 32px;
 }
 
-/* Navigationsbereich in der Sidebar */
+/* Navigation Sections */
 .nav-section {
   margin-top: 16px;
 }
+
+/* ------------------------------- */
+/*   Hauptmenü (Dashboard, KI Agent...) */
+/* ------------------------------- */
 
 .nav-header {
   width: 100%;
   background: transparent;
   border: none;
-  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -75,36 +90,68 @@
   font-weight: 600;
   padding: 8px 0;
   cursor: pointer;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav-header:hover .nav-label {
+  color: #86bc25; /* Hover grün */
 }
 
 .nav-header-icon {
   margin-left: 8px;
 }
 
+/* Single Header Elemente (ohne Dropdown) */
+.nav-header.nav-header-single {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-header.nav-header-single span {
+  text-decoration: none;
+}
+
+/* ------------------------------- */
+/*   Submenü (Rendite, Volatilität...) */
+/* ------------------------------- */
+
 .nav-items {
   margin-left: 12px;
   margin-top: 4px;
   font-size: 14px;
-  color: #e5e7eb;
 }
 
-.nav-items p {
-  margin: 4px 0;
-  cursor: pointer;
+.nav-items a {
+  display: block;
+  padding: 4px 0 4px 28px;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 14px;
 }
 
-.nav-items p:hover {
-  color: #86bc25; /* grün beim Hover */
+.nav-items a:hover {
+  color: #86bc25 !important; /* Hover grün */
 }
 
-/* allgemeine Utility-Klasse */
+/* ------------------------------- */
+/*   Links ohne Unterstreichung    */
+/* ------------------------------- */
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: #ffffff;
+  display: block;
+  padding: 8px 0;
+}
+
+.sidebar-nav a:hover {
+  color: #86bc25;
+}
+
+/* Utility */
 .hidden {
   display: none;
-}
-/* Dashboard Grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 24px;
 }
 
