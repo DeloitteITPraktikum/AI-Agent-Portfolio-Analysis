@@ -19,78 +19,94 @@ const CsvUpload = () => {
   const [error, setError] = useState("");
   const [columns, setColumns] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const fileInputRef = useRef(null);
 
-  // Validierung der CSV
-// Validierung der CSV — liefert gültige Daten + Fehlerprotokoll
-const validateCSV = (parsedData) => {
-  const expected = ["Ticker", "Anzahl", "Kaufpreis"];
-  const headers = Object.keys(parsedData[0] || {});
-  const missing = expected.filter((col) => !headers.includes(col));
+  // Validierung der CSV — liefert gültige Daten + Fehlerprotokoll
+  const validateCSV = (parsedData) => {
+    const expected = ["Ticker", "Anzahl", "Kaufpreis"];
+    const headers = Object.keys(parsedData[0] || {});
+    const missing = expected.filter((col) => !headers.includes(col));
 
-  if (missing.length > 0) {
-    return { errors: [`Fehlende Spalten: ${missing.join(", ")}`], validRows: [] };
-  }
-
-  const errors = [];
-  const validRows = [];
-
-  parsedData.forEach((row, index) => {
-    const rowNr = index + 2; // +2 wegen Header + 1-based index
-
-    if (!row.Ticker || !row.Anzahl || !row.Kaufpreis) {
-      errors.push(`Zeile ${rowNr}: Ein oder mehrere Felder sind leer.`);
-      return;
+    if (missing.length > 0) {
+      return { errors: [`Fehlende Spalten: ${missing.join(", ")}`], validRows: [] };
     }
 
-    if (isNaN(Number(row.Anzahl))) {
-      errors.push(`Zeile ${rowNr}: Anzahl ist keine gültige Zahl.`);
-      return;
-    }
+    const errors = [];
+    const validRows = [];
 
-    if (isNaN(Number(row.Kaufpreis))) {
-      errors.push(`Zeile ${rowNr}: Kaufpreis ist keine gültige Zahl.`);
-      return;
-    }
+    parsedData.forEach((row, index) => {
+      const rowNr = index + 2; // +2 wegen Header + 1-based index
 
-    // Wenn alles ok → Zeile übernehmen
-    validRows.push(row);
-  });
+      if (!row.Ticker || !row.Anzahl || !row.Kaufpreis) {
+        errors.push(`Zeile ${rowNr}: Ein oder mehrere Felder sind leer.`);
+        return;
+      }
 
-  return { errors, validRows };
-};
+      if (isNaN(Number(row.Anzahl))) {
+        errors.push(`Zeile ${rowNr}: Anzahl ist keine gültige Zahl.`);
+        return;
+      }
 
+      if (isNaN(Number(row.Kaufpreis))) {
+        errors.push(`Zeile ${rowNr}: Kaufpreis ist keine gültige Zahl.`);
+        return;
+      }
+
+      // Wenn alles ok → Zeile übernehmen
+      validRows.push(row);
+    });
+
+    return { errors, validRows };
+  };
+
+  // Funktion zum Starten der Analyse
+  const handleAnalyze = () => {
+    if (data.length === 0) return;
+    
+    setIsAnalyzing(true);
+    
+    // Hier würde die Analyse-Logik implementiert werden
+    console.log("Starte Analyse mit Daten:", data);
+    
+    // Simuliere eine Analyse (ersetze dies mit deiner echten Analyse-Logik)
+    setTimeout(() => {
+      setIsAnalyzing(false);
+      alert("Analyse abgeschlossen! Die Portfolio-Kennzahlen wurden aktualisiert.");
+      // Hier könntest du die Dashboard-Kennzahlen aktualisieren
+    }, 2000);
+  };
 
   // Datei-Upload
- const processFile = (file) => {
-  // Wenn kein File existiert → sofort abbrechen
-  if (!file || !file.name) {
-    return;
-  }
+  const processFile = (file) => {
+    // Wenn kein File existiert → sofort abbrechen
+    if (!file || !file.name) {
+      return;
+    }
 
-  if (!file.name.endsWith(".csv")) {
-    setError("Bitte eine gültige CSV-Datei hochladen.");
-    setData([]);
-    return;
-  }
-
+    if (!file.name.endsWith(".csv")) {
+      setError("Bitte eine gültige CSV-Datei hochladen.");
+      setData([]);
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target.result;
       const parsed = parseCSV(text);
 
-  const { errors, validRows } = validateCSV(parsed);
+      const { errors, validRows } = validateCSV(parsed);
 
-if (errors.length > 0) {
-  setError(errors);  // mehrere Fehler!
-}
+      if (errors.length > 0) {
+        setError(errors);  // mehrere Fehler!
+      } else {
+        setError(""); // Keine Fehler vorhanden
+      }
 
-// gültige Zeilen speichern – auch wenn Fehler existieren
-setData(validRows);
-setColumns(validRows.length > 0 ? Object.keys(validRows[0]) : []);
-
+      // gültige Zeilen speichern – auch wenn Fehler existieren
+      setData(validRows);
+      setColumns(validRows.length > 0 ? Object.keys(validRows[0]) : []);
     };
     reader.readAsText(file);
   };
@@ -122,13 +138,12 @@ setColumns(validRows.length > 0 ? Object.keys(validRows[0]) : []);
       {/* Upload Dropzone */}
       <div
         className={`upload-dropzone ${isDragging ? "drag-active" : ""}`}
-      onClick={(e) => {
-  // Nur öffnen, wenn NICHT auf das unsichtbare Input geklickt wurde
-  if (e.target === e.currentTarget) {
-    fileInputRef.current.click();
-  }
-}}
-
+        onClick={(e) => {
+          // Nur öffnen, wenn NICHT auf das unsichtbare Input geklickt wurde
+          if (e.target === e.currentTarget) {
+            fileInputRef.current.click();
+          }
+        }}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -144,26 +159,22 @@ setColumns(validRows.length > 0 ? Object.keys(validRows[0]) : []);
         />
       </div>
 
-{/* Fehlermeldung */}
-{error && (
-  <div className="error-badge">
-    {Array.isArray(error) ? error.join(", ") : error}
-  </div>
-)}
-
-
-
+      {/* Fehlermeldung */}
+      {error && (
+        <div className="error-badge">
+          {Array.isArray(error) ? error.join(", ") : error}
+        </div>
+      )}
 
       {/* Erfolgreiche Tabelle */}
       {!error && data.length > 0 && (
         <div className="mt-4">
-        <span className="upload-badge">
-  Datei erfolgreich hochgeladen – {data.length} Zeilen verarbeitet
-</span>
+          <span className="upload-badge">
+            Datei erfolgreich hochgeladen – {data.length} Zeilen verarbeitet
+          </span>
 
-
-
-<table className="csv-table">            <thead>
+          <table className="csv-table">
+            <thead>
               <tr>
                 {columns.map((col) => (
                   <th
@@ -179,26 +190,37 @@ setColumns(validRows.length > 0 ? Object.keys(validRows[0]) : []);
               {data.slice(0, 5).map((row, i) => (
                 <tr key={i}>
                   {columns.map((col) => (
-                  <td key={col} className="border px-2 py-1">
-  {col === "Kaufpreis"
-    ? Number(row[col]).toLocaleString("de-DE", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }) + " €"
-    : row[col]}
-</td>
+                    <td key={col} className="border px-2 py-1">
+                      {col === "Kaufpreis"
+                        ? Number(row[col]).toLocaleString("de-DE", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }) + " €"
+                        : row[col]}
+                    </td>
                   ))}
                 </tr>
               ))}
             </tbody>
           </table>
 
-        <p className="csv-footnote">
-  Nur die ersten 5 Zeilen werden angezeigt
-</p>
-
+          <p className="csv-footnote">
+            Nur die ersten 5 Zeilen werden angezeigt
+          </p>
         </div>
       )}
+
+      {/* Analyse starten Button */}
+      <div className="analyze-section">
+        <button
+          onClick={handleAnalyze}
+          disabled={isAnalyzing || data.length === 0 || error}
+          className={`analyze-button ${isAnalyzing || data.length === 0 || error ? "analyze-button-disabled" : "analyze-button-active"}`}
+        >
+          {isAnalyzing ? "Analyse läuft..." : "Analyse starten"}
+        </button>
+      </div>
+
     </div>
   );
 };
