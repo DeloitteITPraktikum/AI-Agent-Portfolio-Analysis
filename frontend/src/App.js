@@ -1,37 +1,51 @@
-import './styles/base.css';
-import './styles/components.css';
-import './styles/layout.css';
+import "./styles/base.css";
+import "./styles/components.css";
+import "./styles/layout.css";
+import KIAgentPage from "./pages/KIAgentPage";
+import ReportsPage from "./pages/ReportsPage";
+import SettingsPage from "./pages/SettingsPage";
+
 import CsvUpload from "./components/CsvUpload";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 function App() {
   useEffect(() => {
     // Sidebar & Main Scripts (Dropdowns etc.)
-    const sidebarScript = document.createElement('script');
-    sidebarScript.src = '/js/sidebar.js';
+    const sidebarScript = document.createElement("script");
+    sidebarScript.src = "/js/sidebar.js";
     document.body.appendChild(sidebarScript);
 
-    const mainScript = document.createElement('script');
-    mainScript.src = '/js/main.js';
+    const mainScript = document.createElement("script");
+    mainScript.src = "/js/main.js";
     document.body.appendChild(mainScript);
   }, []);
 
+  const [activePage, setActivePage] = useState("dashboard");
+
   return (
     <div className="app">
-
       {/* Sidebar */}
       <aside className="sidebar">
-
         <div className="logo">
-          <img src="/img/delovest-logo.png" alt="DeloVest Logo" className="logo-img" />
+          <img
+            src="/img/delovest-logo.png"
+            alt="DeloVest Logo"
+            className="logo-img"
+          />
         </div>
 
         <nav className="sidebar-nav">
-
           {/* Dashboard */}
           <div className="nav-section">
-<button className="nav-header nav-header-single active" id="nav-dashboard">
+            <button
+              className={
+                "nav-header nav-header-single " +
+                (activePage === "dashboard" ? "active" : "")
+              }
+              id="nav-dashboard"
+              onClick={() => setActivePage("dashboard")}
+            >
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/dashboard.png" alt="" />
@@ -41,10 +55,19 @@ function App() {
             </button>
           </div>
 
-
           {/* KI Agent */}
           <div className="nav-section">
-            <a href="/pages/agent.html" className="nav-header nav-header-single">
+            <a
+              href="#"
+              className={
+                "nav-header nav-header-single " +
+                (activePage === "agent" ? "active" : "")
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setActivePage("agent");
+              }}
+            >
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/agent.png" alt="" />
@@ -56,82 +79,122 @@ function App() {
 
           {/* Reports */}
           <div className="nav-section">
-            <a href="/pages/reports.html" className="nav-header nav-header-single">
+            <a
+              href="#"
+              className={
+                "nav-header nav-header-single " +
+                (activePage === "reports" ? "active" : "")
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setActivePage("reports");
+              }}
+            >
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/reports.png" alt="" />
                 </span>
-                <span className="nav-label">Reports & Exports</span>
+                <span className="nav-label">Reports &amp; Exports</span>
               </span>
             </a>
           </div>
 
           {/* Einstellungen */}
           <div className="nav-section">
-            <a href="/pages/settings.html" className="nav-header nav-header-single">
+            <a
+              href="#"
+              className={
+                "nav-header nav-header-single " +
+                (activePage === "settings" ? "active" : "")
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setActivePage("settings");
+              }}
+            >
               <span className="nav-left">
                 <span className="nav-icon">
                   <img src="/img/icons/settings.png" alt="" />
                 </span>
-                <span className="nav-label">Einstellungen & Dokumentation</span>
+                <span className="nav-label">Einstellungen &amp; Dokumentation</span>
               </span>
             </a>
           </div>
-
         </nav>
       </aside>
 
-      {/* Hauptbereich (Dashboard bleibt wie vorher) */}
+      {/* Hauptbereich */}
       <main className="main">
+        {/* Dashboard 页面 */}
+        {activePage === "dashboard" && (
+          <>
+            <header className="main-header">
+              <h1>Portfolio Dashboard</h1>
+              <p className="main-subtitle">
+                Überblick über Performance &amp; Risiko-Kennzahlen
+              </p>
+            </header>
 
-        <header className="main-header">
-          <h1>Portfolio Dashboard</h1>
-          <p className="main-subtitle">Überblick über Performance & Risiko-Kennzahlen</p>
-        </header>
+            <section className="dashboard-grid">
+              {/* CSV Upload (React-Komponente) */}
+              <div className="card upload-card">
+                <CsvUpload />
+              </div>
 
-        <section className="dashboard-grid">
+              {/* Kennzahlen */}
+              <div className="card stat-card">
+                <h3>Rendite</h3>
+                <p className="stat-value">0 %</p>
+              </div>
+              <div className="card stat-card">
+                <h3>Volatilität</h3>
+                <p className="stat-value">0 %</p>
+              </div>
+              <div className="card stat-card">
+                <h3>Standardabweichung</h3>
+                <p className="stat-value">0 %</p>
+              </div>
+              <div className="card stat-card">
+                <h3>Risikofreie Rendite</h3>
+                <p className="stat-value">0 %</p>
+              </div>
 
-          {/* CSV Upload (React-Komponente) */}
-          <div className="card upload-card">
-              <CsvUpload /> </div>
+              {/* Widget Slot */}
+              <div className="card widget-slot">
+                <div className="widget-plus">+</div>
+                <p className="widget-text">Widget hinzufügen</p>
+              </div>
 
+              {/* Chart */}
+              <div className="card chart-card">
+                <h2>Portfolio-Chart</h2>
+                <div className="chart-placeholder">[Chart kommt später]</div>
+              </div>
 
-          {/* Kennzahlen */}
-          <div className="card stat-card"><h3>Rendite</h3><p className="stat-value">0 %</p></div>
-          <div className="card stat-card"><h3>Volatilität</h3><p className="stat-value">0 %</p></div>
-          <div className="card stat-card"><h3>Standardabweichung</h3><p className="stat-value">0 %</p></div>
-          <div className="card stat-card"><h3>Risikofreie Rendite</h3><p className="stat-value">0 %</p></div>
+              {/* News */}
+              <div className="card news-card">
+                <h2>Aktuelles aus der Finanzwelt</h2>
+                <p className="news-text">Aktuelles aus der Finanzwelt...</p>
+              </div>
+            </section>
+          </>
+        )}
 
-          {/* Widget Slot */}
-          <div className="card widget-slot">
-            <div className="widget-plus">+</div>
-            <p className="widget-text">Widget hinzufügen</p>
-          </div>
+        {/* KI Agent Seite */}
 
-          {/* Chart */}
-          <div className="card chart-card">
-            <h2>Portfolio-Chart</h2>
-            <div className="chart-placeholder">[Chart kommt später]</div>
-          </div>
+        {activePage === "agent" && <KIAgentPage />}
 
-          {/* News */}
-          <div className="card news-card">
-            <h2>Aktuelles aus der Finanzwelt</h2>
-            <p className="news-text">Aktuelles aus der Finanzwelt...</p>
-          </div>
+        {/* Reports Seite */}
+        {activePage === "reports" && <ReportsPage />}
 
-        </section>
+        {/* Settings Seite */}
+        {activePage === "settings" && <SettingsPage />}
+
       </main>
     </div>
-  
-
-
-    );
+  );
 }
 
 export default App;
-
-
-
 
 
