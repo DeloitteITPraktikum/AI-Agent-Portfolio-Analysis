@@ -154,4 +154,24 @@
 .hidden {
   display: none;
 }
+/* Aktives Menü - grüner Streifen links + Text grün */
+.nav-header.active {
+  background: rgba(134, 188, 37, 0.15);  /* leicht grünlicher Hintergrund */
+  color: #86bc25;                        /* dein DeloVest-Grün */
+  font-weight: 600;
+}
+
+.nav-header.active .nav-label {
+  color: #86bc25 !important;
+}
+
+.nav-header.active .nav-icon img {
+  filter: brightness(0) saturate(100%) invert(78%) sepia(18%) saturate(1157%) hue-rotate(46deg) brightness(93%) contrast(87%);
+}
+
+/* Grüner seitlicher Border */
+.nav-header.active {
+  border-left: 4px solid #86bc25;
+  padding-left: 14px; /* wird optisch ausgeglichen */
+}
 
