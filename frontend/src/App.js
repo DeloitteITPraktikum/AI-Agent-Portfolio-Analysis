@@ -1,6 +1,8 @@
 import './styles/base.css';
 import './styles/components.css';
 import './styles/layout.css';
+import CsvUpload from "./components/CsvUpload";
+
 import { useEffect } from 'react';
 
 function App() {
@@ -89,13 +91,10 @@ function App() {
 
         <section className="dashboard-grid">
 
-          {/* CSV Upload */}
+          {/* CSV Upload (React-Komponente) */}
           <div className="card upload-card">
-            <h2>CSV-Upload</h2>
-            <input type="file" id="csv-input" accept=".csv" className="file-input-hidden" />
-            <button className="btn-upload" id="csv-button">Datei auswählen…</button>
-            <p className="upload-status" id="upload-status">Noch keine Datei hochgeladen.</p>
-          </div>
+              <CsvUpload /> </div>
+
 
           {/* Kennzahlen */}
           <div className="card stat-card"><h3>Rendite</h3><p className="stat-value">0 %</p></div>
@@ -124,7 +123,10 @@ function App() {
         </section>
       </main>
     </div>
-  );
+  
+
+
+    );
 }
 
 export default App;
