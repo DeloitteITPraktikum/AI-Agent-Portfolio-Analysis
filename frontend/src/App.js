@@ -2,6 +2,7 @@ import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/layout.css";
 import ToastContext from "./ToastContext";
+import { DataProvider } from "./context/DataContext"; 
 import KIAgentPage from "./pages/KIAgentPage";
 import ReportsPage from "./pages/ReportsPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -35,173 +36,175 @@ function App() {
   const [activePage, setActivePage] = useState("dashboard");
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
-      <div className="app">
+    <DataProvider>
+      <ToastContext.Provider value={{ showToast }}>
+        <div className="app">
 
-        {/* ---------------- Toast UI oben rechts ---------------- */}
-        <div className={`toast-container ${toastVisible ? "show" : ""}`}>
-          {toastMessage}
-        </div>
-        {/* -------------------------------------------------------- */}
-
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="logo">
-            <img
-              src="/img/delovest-logo.png"
-              alt="DeloVest Logo"
-              className="logo-img"
-            />
+          {/* ---------------- Toast UI oben rechts ---------------- */}
+          <div className={`toast-container ${toastVisible ? "show" : ""}`}>
+            {toastMessage}
           </div>
+          {/* -------------------------------------------------------- */}
 
-          <nav className="sidebar-nav">
-            {/* Dashboard */}
-            <div className="nav-section">
-              <button
-                className={
-                  "nav-header nav-header-single " +
-                  (activePage === "dashboard" ? "active" : "")
-                }
-                id="nav-dashboard"
-                onClick={() => setActivePage("dashboard")}
-              >
-                <span className="nav-left">
-                  <span className="nav-icon">
-                    <img src="/img/icons/dashboard.png" alt="" />
-                  </span>
-                  <span className="nav-label">Dashboard</span>
-                </span>
-              </button>
+          {/* Sidebar */}
+          <aside className="sidebar">
+            <div className="logo">
+              <img
+                src="/img/delovest-logo.png"
+                alt="DeloVest Logo"
+                className="logo-img"
+              />
             </div>
 
-            {/* KI Agent */}
-            <div className="nav-section">
-              <button
-                type="button"
-                className={
-                  "nav-header nav-header-single " +
-                  (activePage === "agent" ? "active" : "")
-                }
-                onClick={() => setActivePage("agent")}
-              >
-                <span className="nav-left">
-                  <span className="nav-icon">
-                    <img src="/img/icons/agent.png" alt="" />
+            <nav className="sidebar-nav">
+              {/* Dashboard */}
+              <div className="nav-section">
+                <button
+                  className={
+                    "nav-header nav-header-single " +
+                    (activePage === "dashboard" ? "active" : "")
+                  }
+                  id="nav-dashboard"
+                  onClick={() => setActivePage("dashboard")}
+                >
+                  <span className="nav-left">
+                    <span className="nav-icon">
+                      <img src="/img/icons/dashboard.png" alt="" />
+                    </span>
+                    <span className="nav-label">Dashboard</span>
                   </span>
-                  <span className="nav-label">KI Agent</span>
-                </span>
-              </button>
-            </div>
+                </button>
+              </div>
 
-            {/* Reports */}
-            <div className="nav-section">
-              <button
-                type="button"
-                className={
-                  "nav-header nav-header-single " +
-                  (activePage === "reports" ? "active" : "")
-                }
-                onClick={() => setActivePage("reports")}
-              >
-                <span className="nav-left">
-                  <span className="nav-icon">
-                    <img src="/img/icons/reports.png" alt="" />
+              {/* KI Agent */}
+              <div className="nav-section">
+                <button
+                  type="button"
+                  className={
+                    "nav-header nav-header-single " +
+                    (activePage === "agent" ? "active" : "")
+                  }
+                  onClick={() => setActivePage("agent")}
+                >
+                  <span className="nav-left">
+                    <span className="nav-icon">
+                      <img src="/img/icons/agent.png" alt="" />
+                    </span>
+                    <span className="nav-label">KI Agent</span>
                   </span>
-                  <span className="nav-label">Reports &amp; Exports</span>
-                </span>
-              </button>
-            </div>
+                </button>
+              </div>
 
-            {/* Einstellungen */}
-            <div className="nav-section">
-              <button
-                type="button"
-                className={
-                  "nav-header nav-header-single " +
-                  (activePage === "settings" ? "active" : "")
-                }
-                onClick={() => setActivePage("settings")}
-              >
-                <span className="nav-left">
-                  <span className="nav-icon">
-                    <img src="/img/icons/settings.png" alt="" />
+              {/* Reports */}
+              <div className="nav-section">
+                <button
+                  type="button"
+                  className={
+                    "nav-header nav-header-single " +
+                    (activePage === "reports" ? "active" : "")
+                  }
+                  onClick={() => setActivePage("reports")}
+                >
+                  <span className="nav-left">
+                    <span className="nav-icon">
+                      <img src="/img/icons/reports.png" alt="" />
+                    </span>
+                    <span className="nav-label">Reports &amp; Exports</span>
                   </span>
-                  <span className="nav-label">Einstellungen &amp; Dokumentation</span>
-                </span>
-              </button>
-            </div>
-          </nav>
-        </aside>
+                </button>
+              </div>
 
-        {/* Hauptbereich */}
-        <main className="main">
-          {/* Dashboard 页面 */}
-          {activePage === "dashboard" && (
-            <>
-              <header className="main-header">
-                <h1>Portfolio Dashboard</h1>
-                <p className="main-subtitle">
-                  Überblick über Performance &amp; Risiko-Kennzahlen
-                </p>
-              </header>
+              {/* Einstellungen */}
+              <div className="nav-section">
+                <button
+                  type="button"
+                  className={
+                    "nav-header nav-header-single " +
+                    (activePage === "settings" ? "active" : "")
+                  }
+                  onClick={() => setActivePage("settings")}
+                >
+                  <span className="nav-left">
+                    <span className="nav-icon">
+                      <img src="/img/icons/settings.png" alt="" />
+                    </span>
+                    <span className="nav-label">Einstellungen &amp; Dokumentation</span>
+                  </span>
+                </button>
+              </div>
+            </nav>
+          </aside>
 
-              <section className="dashboard-grid">
-                {/* CSV Upload (React-Komponente) */}
-                <div className="card upload-card">
-                  <CsvUpload />
-                </div>
+          {/* Hauptbereich */}
+          <main className="main">
+            {/* Dashboard 页面 */}
+            {activePage === "dashboard" && (
+              <>
+                <header className="main-header">
+                  <h1>Portfolio Dashboard</h1>
+                  <p className="main-subtitle">
+                    Überblick über Performance &amp; Risiko-Kennzahlen
+                  </p>
+                </header>
 
-                {/* Kennzahlen */}
-                <div className="card stat-card">
-                  <h3>Rendite</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-                <div className="card stat-card">
-                  <h3>Volatilität</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-                <div className="card stat-card">
-                  <h3>Standardabweichung</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-                <div className="card stat-card">
-                  <h3>Risikofreie Rendite</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
+                <section className="dashboard-grid">
+                  {/* CSV Upload (React-Komponente) */}
+                  <div className="card upload-card">
+                    <CsvUpload />
+                  </div>
 
-                {/* Widget Slot */}
-                <div className="card widget-slot">
-                  <div className="widget-plus">+</div>
-                  <p className="widget-text">Widget hinzufügen</p>
-                </div>
+                  {/* Kennzahlen */}
+                  <div className="card stat-card">
+                    <h3>Rendite</h3>
+                    <p className="stat-value">0 %</p>
+                  </div>
+                  <div className="card stat-card">
+                    <h3>Volatilität</h3>
+                    <p className="stat-value">0 %</p>
+                  </div>
+                  <div className="card stat-card">
+                    <h3>Standardabweichung</h3>
+                    <p className="stat-value">0 %</p>
+                  </div>
+                  <div className="card stat-card">
+                    <h3>Risikofreie Rendite</h3>
+                    <p className="stat-value">0 %</p>
+                  </div>
 
-                {/* Chart */}
-                <div className="card chart-card">
-                  <h2>Portfolio-Chart</h2>
-                  <div className="chart-placeholder">[Chart kommt später]</div>
-                </div>
+                  {/* Widget Slot */}
+                  <div className="card widget-slot">
+                    <div className="widget-plus">+</div>
+                    <p className="widget-text">Widget hinzufügen</p>
+                  </div>
 
-                {/* News */}
-                <div className="card news-card">
-                  <h2>Aktuelles aus der Finanzwelt</h2>
-                  <p className="news-text">Aktuelles aus der Finanzwelt...</p>
-                </div>
-              </section>
-            </>
-          )}
+                  {/* Chart */}
+                  <div className="card chart-card">
+                    <h2>Portfolio-Chart</h2>
+                    <div className="chart-placeholder">[Chart kommt später]</div>
+                  </div>
 
-          {/* KI Agent Seite */}
-          {activePage === "agent" && <KIAgentPage />}
+                  {/* News */}
+                  <div className="card news-card">
+                    <h2>Aktuelles aus der Finanzwelt</h2>
+                    <p className="news-text">Aktuelles aus der Finanzwelt...</p>
+                  </div>
+                </section>
+              </>
+            )}
 
-          {/* Reports Seite */}
-          {activePage === "reports" && <ReportsPage />}
+            {/* KI Agent Seite */}
+            {activePage === "agent" && <KIAgentPage />}
 
-          {/* Settings Seite */}
-          {activePage === "settings" && <SettingsPage />}
+            {/* Reports Seite */}
+            {activePage === "reports" && <ReportsPage />}
 
-        </main>
-      </div>
-    </ToastContext.Provider>
+            {/* Settings Seite */}
+            {activePage === "settings" && <SettingsPage />}
+
+          </main>
+        </div>
+      </ToastContext.Provider>
+    </DataProvider>
   );
 }
 

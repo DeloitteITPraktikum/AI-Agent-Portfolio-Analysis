@@ -1,6 +1,6 @@
-// src/components/CsvUpload.js
 import React, { useState, useRef, useContext } from "react";
 import ToastContext from "../ToastContext";
+import { useData } from "../context/DataContext";
 
 // Hilfsfunktion: CSV → Array von Objekten
 const parseCSV = (text) => {
@@ -25,7 +25,9 @@ const CsvUpload = () => {
 
   const fileInputRef = useRef(null);
   const { showToast } = useContext(ToastContext);
+  const { updatePortfolioData, clearPortfolioData } = useData();
 
+  // Validierung der CSV — liefert gültige Daten + Fehlerprotokoll
   const validateCSV = (parsedData) => {
     const expected = ["Ticker", "Anzahl", "Kaufpreis"];
     const headers = Object.keys(parsedData[0] || {});
@@ -62,11 +64,11 @@ const CsvUpload = () => {
     return { errors, validRows };
   };
 
+  // Funktion zum Starten der Analyse
   const handleAnalyze = () => {
     if (data.length === 0) return;
-
+    
     setIsAnalyzing(true);
-    console.log("Starte Analyse mit Daten:", data);
 
     setTimeout(() => {
       setIsAnalyzing(false);
@@ -74,12 +76,14 @@ const CsvUpload = () => {
     }, 2000);
   };
 
+  // Datei-Upload
   const processFile = (file) => {
     if (!file || !file.name) return;
 
     if (!file.name.endsWith(".csv")) {
       setError("Bitte eine gültige CSV-Datei hochladen.");
       setData([]);
+      clearPortfolioData();
       return;
     }
 
@@ -92,18 +96,20 @@ const CsvUpload = () => {
 
       if (errors.length > 0) {
         setError(errors);
+        clearPortfolioData();
       } else {
         setError("");
+        updatePortfolioData(validRows);
       }
 
       setData(validRows);
       setColumns(validRows.length > 0 ? Object.keys(validRows[0]) : []);
-
       if (validRows.length > 0) setUploaded(true);
     };
     reader.readAsText(file);
   };
 
+  // Drag & Drop Events
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
@@ -112,13 +118,27 @@ const CsvUpload = () => {
     if (file) processFile(file);
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleReplaceFile = () => {
+    setUploaded(false);
+    setData([]);
+    setError("");
+    clearPortfolioData();
+  };
+
   return (
     <div>
-
       <h3 className="upload-title">CSV-Upload</h3>
 
-      {/* Upload-Feld nur anzeigen, wenn nicht hochgeladen */}
-      {!uploaded && (
+      {!uploaded ? (
         <div
           className={`upload-dropzone ${isDragging ? "drag-active" : ""}`}
           onClick={(e) => {
@@ -127,8 +147,8 @@ const CsvUpload = () => {
             }
           }}
           onDrop={handleDrop}
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-          onDragLeave={() => setIsDragging(false)}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
         >
           <div className="upload-icon">+</div>
           <div className="upload-text">Datei hochladen bzw. hierher ziehen</div>
@@ -140,57 +160,58 @@ const CsvUpload = () => {
             onChange={(e) => processFile(e.target.files[0])}
           />
         </div>
+      ) : (
+        !error && data.length > 0 && (
+          <div className="mt-4">
+            <span className="upload-badge">
+              Datei erfolgreich hochgeladen – {data.length} Zeilen verarbeitet
+            </span>
+
+            <table className="csv-table">
+              <thead>
+                <tr>
+                  {columns.map((col) => (
+                    <th key={col}>
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {data.slice(0, 5).map((row, i) => (
+                  <tr key={i}>
+                    {columns.map((col) => (
+                      <td key={col}>
+                        {col === "Kaufpreis"
+                          ? Number(row[col]).toLocaleString("de-DE", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }) + " €"
+                          : row[col]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <p className="csv-footnote">
+              Nur die ersten 5 Zeilen werden angezeigt
+            </p>
+
+            <button
+              className="replace-csv-btn"
+              onClick={handleReplaceFile}
+            >
+              Neue Datei wählen
+            </button>
+          </div>
+        )
       )}
 
       {error && (
         <div className="error-badge">
           {Array.isArray(error) ? error.join(", ") : error}
-        </div>
-      )}
-
-      {!error && data.length > 0 && (
-        <div className="mt-4">
-
-          <span className="upload-badge">
-            Datei erfolgreich hochgeladen – {data.length} Zeilen verarbeitet
-          </span>
-
-          <table className="csv-table">
-            <thead>
-              <tr>
-                {columns.map((col) => (
-                  <th key={col}>{col}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.slice(0, 5).map((row, i) => (
-                <tr key={i}>
-                  {columns.map((col) => (
-                    <td key={col}>
-                      {col === "Kaufpreis"
-                        ? Number(row[col]).toLocaleString("de-DE", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }) + " €"
-                        : row[col]}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <p className="csv-footnote">Nur die ersten 5 Zeilen werden angezeigt</p>
-
-          {/* ★ Grauer "CSV ersetzen" Button */}
-          <button
-            className="replace-csv-btn"
-            onClick={() => { setUploaded(false); setData([]); }}
-          >
-            Neue Datei wählen
-          </button>
-
         </div>
       )}
 
@@ -207,7 +228,6 @@ const CsvUpload = () => {
           {isAnalyzing ? "Analyse läuft..." : "Analyse starten"}
         </button>
       </div>
-
     </div>
   );
 };
