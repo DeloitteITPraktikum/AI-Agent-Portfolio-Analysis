@@ -2,15 +2,17 @@ import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/layout.css";
 import ToastContext from "./ToastContext";
-import { DataProvider } from "./context/DataContext"; 
+import { DataProvider } from "./context/DataContext";
 import KIAgentPage from "./pages/KIAgentPage";
 import ReportsPage from "./pages/ReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import CsvUpload from "./components/CsvUpload";
 import { useEffect, useState } from "react";
+// Tooltip-Komponente importieren
+import InfoTooltip from "./components/InfoToolTip";
 
 function App() {
-  // ---------------- Toast Logic ----------------
+  // ---------------- Toast Logik ----------------
   const [toastMessage, setToastMessage] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
 
@@ -20,7 +22,7 @@ function App() {
 
     setTimeout(() => setToastVisible(false), 3000);
   };
-  // ----------------------------------------------
+  // --------------------------------------------
 
   useEffect(() => {
     // Sidebar & Main Scripts (Dropdowns etc.)
@@ -39,12 +41,11 @@ function App() {
     <DataProvider>
       <ToastContext.Provider value={{ showToast }}>
         <div className="app">
-
           {/* ---------------- Toast UI oben rechts ---------------- */}
           <div className={`toast-container ${toastVisible ? "show" : ""}`}>
             {toastMessage}
           </div>
-          {/* -------------------------------------------------------- */}
+          {/* ------------------------------------------------------ */}
 
           {/* Sidebar */}
           <aside className="sidebar">
@@ -128,7 +129,9 @@ function App() {
                     <span className="nav-icon">
                       <img src="/img/icons/settings.png" alt="" />
                     </span>
-                    <span className="nav-label">Einstellungen &amp; Dokumentation</span>
+                    <span className="nav-label">
+                      Einstellungen &amp; Dokumentation
+                    </span>
                   </span>
                 </button>
               </div>
@@ -151,35 +154,69 @@ function App() {
                   <CsvUpload />
                 </div>
 
-                {/* ----------- KPI ROW (zentriert & modern) ------------ */}
+                {/* ----------- KPI-Row mit Tooltips für Kennzahlen ------------ */}
                 <div className="kpi-row">
+                  {/* Rendite */}
                   <div className="kpi-item">
-                    <span className="kpi-label">Rendite</span>
+                    <span className="kpi-label">
+                      <InfoTooltip
+                        label={<span className="kpi-label-text">Rendite</span>}
+                        text="Rendite: Verhältnis zwischen Gewinn und eingesetztem Kapital über den betrachteten Zeitraum."
+                      />
+                    </span>
                     <span className="kpi-value"> -- </span>
                   </div>
 
                   <div className="kpi-divider"></div>
 
+                  {/* Volatilität */}
                   <div className="kpi-item">
-                    <span className="kpi-label">Volatilität</span>
+                    <span className="kpi-label">
+                      <InfoTooltip
+                        label={
+                          <span className="kpi-label-text">Volatilität</span>
+                        }
+                        text="Volatilität: Maß für die Schwankungsintensität der Renditen; je höher, desto unsicherer die Entwicklung."
+                      />
+                    </span>
                     <span className="kpi-value"> -- </span>
                   </div>
 
                   <div className="kpi-divider"></div>
 
+                  {/* Standardabweichung */}
                   <div className="kpi-item">
-                    <span className="kpi-label">Standardabweichung</span>
+                    <span className="kpi-label">
+                      <InfoTooltip
+                        label={
+                          <span className="kpi-label-text">
+                            Standardabweichung
+                          </span>
+                        }
+                        text="Standardabweichung: statistisches Maß für die durchschnittliche Abweichung der Renditen vom Mittelwert."
+                      />
+                    </span>
                     <span className="kpi-value"> -- </span>
                   </div>
 
                   <div className="kpi-divider"></div>
 
+                  {/* Risikofreie Rendite */}
                   <div className="kpi-item">
-                    <span className="kpi-label">Risikofreie Rendite</span>
+                    <span className="kpi-label">
+                      <InfoTooltip
+                        label={
+                          <span className="kpi-label-text">
+                            Risikofreie Rendite
+                          </span>
+                        }
+                        text="Risikofreie Rendite: Referenzrendite einer als sicher geltenden Anlage, z.B. kurzlaufende Staatsanleihen."
+                      />
+                    </span>
                     <span className="kpi-value"> -- </span>
                   </div>
                 </div>
-                {/* ------------------------------------------------------ */}
+                {/* ------------------------------------------------------------ */}
 
                 <section className="dashboard-grid">
                   {/* Widget Slot */}

@@ -46,12 +46,14 @@
 
 /* Hover für Hauptmenüpunkte */
 .nav-header:hover {
-  color: #86bc25; /* <<< neue Farbe */
+  color: #86bc25;
+  /* <<< neue Farbe */
 }
 
 /* Icon im Hover einfärben */
 .nav-header:hover .nav-header-icon {
-  color: #86bc25; /* <<< neue Farbe */
+  color: #86bc25;
+  /* <<< neue Farbe */
 }
 
 /* Unterpunkte (Dropdown) */
@@ -66,7 +68,8 @@
 }
 
 .nav-items p:hover {
-  color: #86bc25; /* <<< neue Farbe */
+  color: #86bc25;
+  /* <<< neue Farbe */
 }
 
 /* Einfache Punkte ohne Icon (Dashboard etc.) */
@@ -76,7 +79,8 @@
 
 /* Aktiver Menüpunkt */
 .nav-header.active {
-  color: #86bc25; /* <<< neue Farbe */
+  color: #86bc25;
+  /* <<< neue Farbe */
 }
 
 /* ----------------------------------------
@@ -100,7 +104,8 @@
 .btn-upload {
   margin-top: 12px;
   padding: 10px 16px;
-  background: #86bc25; /* <<< neue Farbe */
+  background: #86bc25;
+  /* <<< neue Farbe */
   color: white;
   border: none;
   border-radius: 6px;
@@ -110,7 +115,8 @@
 }
 
 .btn-upload:hover {
-  background: #7aa921; /* leichte dunklere Variante */
+  background: #7aa921;
+  /* leichte dunklere Variante */
 }
 
 /* Kennzahlen-Karten */
@@ -199,12 +205,16 @@
   gap: 12px;
   width: 100%;
 }
+
 .nav-label {
   display: inline-block;
   text-align: left;
-  width: 150px;   /* feste Breite für perfekte Linksausrichtung */
-  white-space: normal;  /* erlaubt mehrzeiliges Texten */
-  line-height: 1.2;     /* schönerer Zeilenabstand */
+  width: 150px;
+  /* feste Breite für perfekte Linksausrichtung */
+  white-space: normal;
+  /* erlaubt mehrzeiliges Texten */
+  line-height: 1.2;
+  /* schönerer Zeilenabstand */
 }
 
 
@@ -212,7 +222,8 @@
 .nav-icon {
   width: 20px;
   height: 20px;
-  min-width: 20px;   /* verhindert Verschieben */
+  min-width: 20px;
+  /* verhindert Verschieben */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,6 +245,7 @@
 .nav-header {
   justify-content: space-between;
 }
+
 /* Widget-Slot (gestrichelte Box mit Plus) */
 .widget-slot {
   display: flex;
@@ -252,7 +264,8 @@
 .widget-plus {
   font-size: 32px;
   font-weight: 700;
-  color: #86bc25;      /* dein Grün */
+  color: #86bc25;
+  /* dein Grün */
   line-height: 1;
 }
 
@@ -267,6 +280,7 @@
   background: #f1f5f9;
   transform: translateY(-1px);
 }
+
 .upload-dropzone {
   border: 2px dashed #86bc25;
   border-radius: 14px;
@@ -320,24 +334,30 @@
 .upload-input::file-selector-button {
   display: none;
 }
+
 .upload-title {
   font-size: 24px;
-  font-weight: 700;   /* richtig fett */
+  font-weight: 700;
+  /* richtig fett */
   text-align: center;
   margin-bottom: 10px;
-  color: #0f172a;     /* dunkles Blau wie Dashboard */
+  color: #0f172a;
+  /* dunkles Blau wie Dashboard */
 }
+
 /* Elegante CSV-Tabelle */
 .csv-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 12px;
   font-size: 14px;
-  border: 1px solid #e2e8f0; /* hellgrau */
+  border: 1px solid #e2e8f0;
+  /* hellgrau */
   border-radius: 8px;
   overflow: hidden;
   background: white;
 }
+
 /* Tabellenzellen + Header zentrieren */
 .csv-table th,
 .csv-table td {
@@ -352,14 +372,16 @@
 
 /* Tabellen-Header */
 .csv-table thead {
-  background: #f1f5f9; /* hellblau-grau */
+  background: #f1f5f9;
+  /* hellblau-grau */
 }
 
 .csv-table th {
   padding: 12px;
   text-align: left;
   font-weight: 700;
-  color: #334155; /* slate */
+  color: #334155;
+  /* slate */
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -377,22 +399,28 @@
 
 /* Hover-Effekt */
 .csv-table tbody tr:hover {
-  background: #eef6e6; /* leichtes Grün */
+  background: #eef6e6;
+  /* leichtes Grün */
   transition: all 0.15s ease;
 }
+
 /* Dezenter Tabellen-Footnote-Hinweis */
 .csv-footnote {
   font-size: 12px;
-  color: #94a3b8;   /* helles Slate-Grau */
+  color: #94a3b8;
+  /* helles Slate-Grau */
   font-style: italic;
   margin-top: 6px;
-  text-align: left; 
+  text-align: left;
   padding-left: 4px;
   opacity: 0.8;
 }
+
 .upload-badge {
-  background: #e7f8ec;       /* sehr helles Grün */
-  color: #0f172a;            /* professionelles Grün */
+  background: #e7f8ec;
+  /* sehr helles Grün */
+  color: #0f172a;
+  /* professionelles Grün */
   padding: 6px 14px;
   border-radius: 6px;
   font-size: 14px;
@@ -412,6 +440,7 @@
   text-align: center;
   font-weight: 600;
 }
+
 .upload-dropzone {
   transition: 0.25s ease, box-shadow 0.25s ease;
 }
@@ -420,13 +449,21 @@
   box-shadow: 0 0 18px rgba(134, 188, 37, 0.25);
   transform: translateY(-1px);
 }
+
 .csv-table {
   animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ----------------------------------------
@@ -465,6 +502,7 @@
   color: #64748b;
   cursor: not-allowed;
 }
+
 /* ----------------------------------------
    Toast Notification (oben rechts)
 ----------------------------------------- */
@@ -478,7 +516,7 @@
   padding: 14px 22px;
   border-radius: 10px;
   font-size: 15px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   transition: all 0.35s ease;
   z-index: 9999;
   opacity: 0;
@@ -488,6 +526,7 @@
   right: 20px;
   opacity: 1;
 }
+
 /* Grauer "CSV ersetzen" Button */
 .replace-csv-btn {
   margin: 12px 0 0 0;
@@ -505,6 +544,7 @@
 .replace-csv-btn:hover {
   background: #e2e8f0;
 }
+
 /* Tabellen-Header größer & klarer */
 .csv-table th {
   font-size: 18px;
@@ -521,10 +561,53 @@
 /* Row Hover leicht betonen (optional, sieht sehr clean aus) */
 .kpi-row {
   display: flex;
-  justify-content: center;     /* Zentriert alles */
-  gap: 48px;                    /* Größerer, angenehmer Abstand */
+  justify-content: center;
+  /* Zentriert alles */
+  gap: 48px;
+  /* Größerer, angenehmer Abstand */
   margin: 40px 0 20px;
   align-items: center;
 }
 
+.kpi-label-text {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
 
+
+/* Wrapper um das Label – dient als Trigger für den Tooltip */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+  /* Mauszeiger zeigt an, dass es Info gibt */
+}
+
+/* Die Infobox ist standardmäßig ausgeblendet */
+.tooltip-box {
+  display: none;
+  position: absolute;
+  top: 120%;
+  /* Position unter dem Label */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 8px;
+  font-size: 12px;
+  background: #d0d7de;
+  color: #000000;
+  border-radius: 4px;
+  min-width: 260px;
+  max-width: 360px;
+  white-space: normal;
+  /* kein Zeilenumbruch */
+  z-index: 10;
+}
+
+
+
+
+/* Tooltip erscheint, wenn der Benutzer über das Label hovert */
+.tooltip-wrapper:hover .tooltip-box {
+  display: block;
+}
