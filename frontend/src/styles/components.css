@@ -321,7 +321,7 @@
   display: none;
 }
 .upload-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;   /* richtig fett */
   text-align: center;
   margin-bottom: 10px;
@@ -465,3 +465,44 @@
   color: #64748b;
   cursor: not-allowed;
 }
+/* ----------------------------------------
+   Toast Notification (oben rechts)
+----------------------------------------- */
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: -350px;
+  background: #000000;
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-size: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: all 0.35s ease;
+  z-index: 9999;
+  opacity: 0;
+}
+
+.toast-container.show {
+  right: 20px;
+  opacity: 1;
+}
+/* Grauer "CSV ersetzen" Button */
+.replace-csv-btn {
+  margin: 12px 0 0 0;
+  padding: 8px 16px;
+  background: #eef1f4;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.replace-csv-btn:hover {
+  background: #e2e8f0;
+}
+
