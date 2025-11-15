@@ -246,40 +246,10 @@
   justify-content: space-between;
 }
 
-/* Widget-Slot (gestrichelte Box mit Plus) */
-.widget-slot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-style: dashed;
-  border-width: 2px;
-  border-color: #cbd5e1;
-  background: #f8fafc;
-  cursor: pointer;
-  transition: border-color 0.2s ease, all 0.2s ease, transform 0.1s ease;
-}
 
-.widget-plus {
-  font-size: 32px;
-  font-weight: 700;
-  color: #86bc25;
-  /* dein Grün */
-  line-height: 1;
-}
 
-.widget-text {
-  font-size: 14px;
-  color: #64748b;
-}
 
-/* kleiner Hover-Effekt */
-.widget-slot:hover {
-  border-color: #86bc25;
-  background: #f1f5f9;
-  transform: translateY(-1px);
-}
+
 
 .upload-dropzone {
   border: 2px dashed #86bc25;

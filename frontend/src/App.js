@@ -219,11 +219,7 @@ function App() {
                 {/* ------------------------------------------------------------ */}
 
                 <section className="dashboard-grid">
-                  {/* Widget Slot */}
-                  <div className="card widget-slot">
-                    <div className="widget-plus">+</div>
-                    <p className="widget-text">Widget hinzufügen</p>
-                  </div>
+              
 
                   {/* Chart */}
                   <div className="card chart-card">
