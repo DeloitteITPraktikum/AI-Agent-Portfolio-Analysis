@@ -227,11 +227,8 @@ function App() {
                     <div className="chart-placeholder">[Chart kommt später]</div>
                   </div>
 
-                  {/* News */}
-                  <div className="card news-card">
-                    <h2>Aktuelles aus der Finanzwelt</h2>
-                    <p className="news-text">Aktuelles aus der Finanzwelt...</p>
-                  </div>
+                 
+                
                 </section>
               </>
             )}
