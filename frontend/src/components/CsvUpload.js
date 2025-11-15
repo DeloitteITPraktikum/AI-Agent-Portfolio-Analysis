@@ -28,97 +28,41 @@ const CsvUpload = () => {
   const { updatePortfolioData, clearPortfolioData } = useData();
 
   // Validierung der CSV — liefert gültige Daten + Fehlerprotokoll
+  const validateCSV = (parsedData) => {
+    const expected = ["Ticker", "Anzahl", "Kaufpreis"];
+    const headers = Object.keys(parsedData[0] || {});
+    const missing = expected.filter((col) => !headers.includes(col));
 
-  /**
- * Simple CSV parser (no quoted commas).
- * Converts CSV text into:
- *  { headers: [...], rows: [ {col1:value1, col2:value2...}, ... ] }
- */
-function parseCsv(text) {
-  const lines = text
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(line => line.length > 0);
-
-  if (lines.length === 0) {
-    return { headers: [], rows: [] };
-  }
-
-  const headers = lines[0].split(",").map(h => h.trim());
-  const rows = [];
-
-  for (let i = 1; i < lines.length; i++) {
-    const cells = lines[i].split(",");
-    const rowObj = {};
-    headers.forEach((header, index) => {
-      rowObj[header] = cells[index] ? cells[index].trim() : "";
-    });
-    rows.push(rowObj);
-  }
-
-  return { headers, rows };
-}
-
-/**
- * Validate a CSV file:
- * 1) Ensure required columns: Ticker, Gewichtung
- * 2) Ensure all Gewichtung values are between 0 and 1
- * 3) Ensure the sum of Gewichtung ≈ 1 (with tolerance)
- * 4) Allow any additional columns (Kaufpreis, Anzahl, etc.)
- *
- * @param {string} csvText - CSV file content as text
- * @param {number} tolerance - allowed deviation for sum=1 (default 1e-6)
- * @returns {{ valid: boolean, messages: string[] }}
- */
-function validateCsvText(csvText, tolerance = 1e-6) {
-  const result = { valid: true, messages: [] };
-
-  try {
-    const { headers, rows } = parseCsv(csvText);
-
-    
-    const required = new Set(["Ticker", "Gewichtung"]);
-    const headerSet = new Set(headers);
-
-    const missing = [...required].filter(col => !headerSet.has(col));
     if (missing.length > 0) {
-      result.valid = false;
-      result.messages.push("Missing required columns: " + missing.join(", "));
+      return { errors: [`Fehlende Spalten: ${missing.join(", ")}`], validRows: [] };
     }
- 
-    if (headerSet.has("Gewichtung")) {
-      const weights = rows.map(row => parseFloat(row["Gewichtung"]));
 
-      
-      const validRange = weights.every(v => !isNaN(v) && v >= 0 && v <= 1);
-      if (!validRange) {
-        result.valid = false;
-        result.messages.push("Some 'Gewichtung' values are outside 0–1 or not numeric.");
+    const errors = [];
+    const validRows = [];
+
+    parsedData.forEach((row, index) => {
+      const rowNr = index + 2;
+
+      if (!row.Ticker || !row.Anzahl || !row.Kaufpreis) {
+        errors.push(`Zeile ${rowNr}: Ein oder mehrere Felder sind leer.`);
+        return;
       }
 
-      
-      const total = weights.reduce((sum, v) => sum + (isNaN(v) ? 0 : v), 0);
-      if (Math.abs(total - 1) > tolerance) {
-        result.valid = false;
-        result.messages.push(
-          `The sum of 'Gewichtung' must be 1 (±${tolerance}). Current sum = ${total}.`
-        );
+      if (isNaN(Number(row.Anzahl))) {
+        errors.push(`Zeile ${rowNr}: Anzahl ist keine gültige Zahl.`);
+        return;
       }
-    }
 
-    
-    if (result.valid && result.messages.length === 0) {
-      result.messages.push("CSV file is valid.");
-    }
+      if (isNaN(Number(row.Kaufpreis))) {
+        errors.push(`Zeile ${rowNr}: Kaufpreis ist keine gültige Zahl.`);
+        return;
+      }
 
-  } catch (err) {
-    result.valid = false;
-    result.messages.push("Error parsing CSV: " + err.message);
-  }
+      validRows.push(row);
+    });
 
-  return result;
-}
-
+    return { errors, validRows };
+  };
 
   // Funktion zum Starten der Analyse
   const handleAnalyze = () => {
@@ -148,9 +92,7 @@ function validateCsvText(csvText, tolerance = 1e-6) {
       const text = e.target.result;
       const parsed = parseCSV(text);
 
-      const { errors, validRows } = validateCsvText(Text)
-
-;
+      const { errors, validRows } = validateCSV(parsed);
 
       if (errors.length > 0) {
         setError(errors);
