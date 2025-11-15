@@ -135,7 +135,6 @@ function App() {
 
         {/* Hauptbereich */}
         <main className="main">
-          {/* Dashboard 页面 */}
           {activePage === "dashboard" && (
             <>
               <header className="main-header">
@@ -145,35 +144,44 @@ function App() {
                 </p>
               </header>
 
+              {/* CSV Upload */}
+              <div className="card upload-card">
+                <CsvUpload />
+              </div>
+
+              {/* ----------- KPI ROW (zentriert & modern) ------------ */}
+              <div className="kpi-row">
+
+                <div className="kpi-item">
+                  <span className="kpi-label">Rendite</span>
+                  <span className="kpi-value">0 %</span>
+                </div>
+
+                <div className="kpi-divider"></div>
+
+                <div className="kpi-item">
+                  <span className="kpi-label">Volatilität</span>
+                  <span className="kpi-value">0 %</span>
+                </div>
+
+                <div className="kpi-divider"></div>
+
+                <div className="kpi-item">
+                  <span className="kpi-label">Standardabweichung</span>
+                  <span className="kpi-value">0 %</span>
+                </div>
+
+                <div className="kpi-divider"></div>
+
+                <div className="kpi-item">
+                  <span className="kpi-label">Risikofreie Rendite</span>
+                  <span className="kpi-value">0 %</span>
+                </div>
+
+              </div>
+              {/* ------------------------------------------------------ */}
+
               <section className="dashboard-grid">
-                {/* CSV Upload (React-Komponente) */}
-                <div className="card upload-card">
-                  <CsvUpload />
-                </div>
-
-                {/* Kennzahlen */}
-                <div className="card stat-card">
-                  <h3>Rendite</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-                <div className="card stat-card">
-                  <h3>Volatilität</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-                <div className="card stat-card">
-                  <h3>Standardabweichung</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-                <div className="card stat-card">
-                  <h3>Risikofreie Rendite</h3>
-                  <p className="stat-value">0 %</p>
-                </div>
-
-                {/* Widget Slot */}
-                <div className="card widget-slot">
-                  <div className="widget-plus">+</div>
-                  <p className="widget-text">Widget hinzufügen</p>
-                </div>
 
                 {/* Chart */}
                 <div className="card chart-card">
@@ -186,17 +194,13 @@ function App() {
                   <h2>Aktuelles aus der Finanzwelt</h2>
                   <p className="news-text">Aktuelles aus der Finanzwelt...</p>
                 </div>
+
               </section>
             </>
           )}
 
-          {/* KI Agent Seite */}
           {activePage === "agent" && <KIAgentPage />}
-
-          {/* Reports Seite */}
           {activePage === "reports" && <ReportsPage />}
-
-          {/* Settings Seite */}
           {activePage === "settings" && <SettingsPage />}
 
         </main>

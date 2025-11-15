@@ -505,4 +505,26 @@
 .replace-csv-btn:hover {
   background: #e2e8f0;
 }
+/* Tabellen-Header größer & klarer */
+.csv-table th {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px 10px;
+}
+
+/* Tabellen-Zellen größer & besser lesbar */
+.csv-table td {
+  font-size: 18px;
+  padding: 12px 10px;
+}
+
+/* Row Hover leicht betonen (optional, sieht sehr clean aus) */
+.kpi-row {
+  display: flex;
+  justify-content: center;     /* Zentriert alles */
+  gap: 48px;                    /* Größerer, angenehmer Abstand */
+  margin: 40px 0 20px;
+  align-items: center;
+}
+
 
