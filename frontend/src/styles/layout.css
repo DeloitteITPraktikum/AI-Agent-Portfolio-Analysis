@@ -174,4 +174,38 @@
   border-left: 4px solid #86bc25;
   padding-left: 14px; /* wird optisch ausgeglichen */
 }
+/* --------------------------------------- */
+/*  KPI-Leiste modern / zentriert          */
+/* --------------------------------------- */
+
+.kpi-row {
+  display: flex;
+  justify-content: center;      /* zentriert */
+  gap: 48px;                    /* Abstand zwischen KPIs */
+  margin: 48px 0 32px;
+  align-items: center;
+}
+
+.kpi-item {
+  text-align: center;
+}
+
+.kpi-label {
+  font-size: 15px;
+  color: #475569;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #86bc25; /* DeloVest Grün */
+}
+
+.kpi-divider {
+  width: 1px;
+  height: 38px;
+  background-color: #e2e8f0;
+}
 
