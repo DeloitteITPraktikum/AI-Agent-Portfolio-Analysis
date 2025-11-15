@@ -154,28 +154,28 @@ function App() {
 
                 <div className="kpi-item">
                   <span className="kpi-label">Rendite</span>
-                  <span className="kpi-value">0 %</span>
+                  <span className="kpi-value"> -- </span>
                 </div>
 
                 <div className="kpi-divider"></div>
 
                 <div className="kpi-item">
                   <span className="kpi-label">Volatilität</span>
-                  <span className="kpi-value">0 %</span>
+                  <span className="kpi-value"> -- </span>
                 </div>
 
                 <div className="kpi-divider"></div>
 
                 <div className="kpi-item">
                   <span className="kpi-label">Standardabweichung</span>
-                  <span className="kpi-value">0 %</span>
+                  <span className="kpi-value"> -- </span>
                 </div>
 
                 <div className="kpi-divider"></div>
 
                 <div className="kpi-item">
                   <span className="kpi-label">Risikofreie Rendite</span>
-                  <span className="kpi-value">0 %</span>
+                  <span className="kpi-value"> -- </span>
                 </div>
 
               </div>
@@ -190,10 +190,7 @@ function App() {
                 </div>
 
                 {/* News */}
-                <div className="card news-card">
-                  <h2>Aktuelles aus der Finanzwelt</h2>
-                  <p className="news-text">Aktuelles aus der Finanzwelt...</p>
-                </div>
+                
 
               </section>
             </>
