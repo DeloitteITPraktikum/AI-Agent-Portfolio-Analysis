@@ -22,7 +22,7 @@ function SettingsPage() {
     // Toast-Benachrichtigung anzeigen
     setShowSuccess(true);
     
-    // Nach 3 Sekunden automatisch ausblenden
+    // Nach 5 Sekunden automatisch ausblenden
     setTimeout(() => {
       setShowSuccess(false);
     }, 5000);
