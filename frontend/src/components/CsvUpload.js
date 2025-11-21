@@ -138,82 +138,93 @@ const CsvUpload = () => {
     <div>
       <h3 className="upload-title">CSV-Upload</h3>
 
-      {!uploaded ? (
-        <div
-          className={`upload-dropzone ${isDragging ? "drag-active" : ""}`}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              fileInputRef.current.click();
-            }
-          }}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-        >
-          <div className="upload-icon">+</div>
-          <div className="upload-text">Datei hochladen bzw. hierher ziehen</div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".csv"
-            className="upload-input"
-            onChange={(e) => processFile(e.target.files[0])}
-          />
-        </div>
-      ) : (
-        !error && data.length > 0 && (
-          <div className="mt-4">
-            <span className="upload-badge">
-              Datei erfolgreich hochgeladen – {data.length} Zeilen verarbeitet
-            </span>
+     {(!uploaded || error) ? (
+  <div
+    className={`upload-dropzone ${isDragging ? "drag-active" : ""}`}
+    onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        fileInputRef.current.click();
+      }
+    }}
+    onDrop={handleDrop}
+    onDragOver={handleDragOver}
+    onDragLeave={handleDragLeave}
+  >
+    <div className="upload-icon">+</div>
+    <div className="upload-text">Datei hochladen bzw. hierher ziehen</div>
 
-            <table className="csv-table">
-              <thead>
-                <tr>
-                  {columns.map((col) => (
-                    <th key={col}>
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.slice(0, 5).map((row, i) => (
-                  <tr key={i}>
-                    {columns.map((col) => (
-                      <td key={col}>
-                        {col === "Kaufpreis"
-                          ? Number(row[col]).toLocaleString("de-DE", {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            }) + " €"
-                          : row[col]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <input
+      ref={fileInputRef}
+      type="file"
+      accept=".csv"
+      className="upload-input"
+      onChange={(e) => processFile(e.target.files[0])}
+    />
+  </div>
+) : (
+  !error && data.length > 0 && (
+    <div className="mt-4">
+      <span className="upload-badge">
+        Datei erfolgreich hochgeladen – {data.length} Zeilen verarbeitet
+      </span>
 
-            <p className="csv-footnote">
-              Nur die ersten 5 Zeilen werden angezeigt
-            </p>
+      <table className="csv-table">
+        <thead>
+          <tr>
+            {columns.map((col) => (
+              <th key={col}>
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.slice(0, 5).map((row, i) => (
+            <tr key={i}>
+              {columns.map((col) => (
+                <td key={col}>
+                  {col === "Kaufpreis"
+                    ? Number(row[col]).toLocaleString("de-DE", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }) + " €"
+                    : row[col]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-            <button
-              className="replace-csv-btn"
-              onClick={handleReplaceFile}
-            >
-              Neue Datei wählen
-            </button>
-          </div>
-        )
-      )}
+      <p className="csv-footnote">
+        Nur die ersten 5 Zeilen werden angezeigt
+      </p>
 
-      {error && (
-        <div className="error-badge">
-          {Array.isArray(error) ? error.join(", ") : error}
-        </div>
-      )}
+      <button
+        className="replace-csv-btn"
+        onClick={handleReplaceFile}
+      >
+        Neue Datei wählen
+      </button>
+    </div>
+  )
+)}
+
+     {error && (
+  <div className="mt-4">
+    <div className="error-badge">
+      {Array.isArray(error) ? error.join(", ") : error}
+    </div>
+
+    <button
+      className="replace-csv-btn"
+      onClick={handleReplaceFile}
+    >
+      Neue Datei wählen
+    </button>
+  </div>
+)}
+
 
       <div className="analyze-section">
         <button

@@ -193,7 +193,7 @@ function App() {
                             Standardabweichung
                           </span>
                         }
-                        text="Standardabweichung: statistisches Maß für die durchschnittliche Abweichung der Renditen vom Mittelwert."
+                        text="Standardabweichung: Statistisches Maß für die durchschnittliche Abweichung der Renditen vom Mittelwert."
                       />
                     </span>
                     <span className="kpi-value"> -- </span>
@@ -210,7 +210,7 @@ function App() {
                             Risikofreie Rendite
                           </span>
                         }
-                        text="Risikofreie Rendite: Referenzrendite einer als sicher geltenden Anlage, z.B. kurzlaufende Staatsanleihen."
+                        text="Risikofreie Rendite: Referenzrendite einer als sicher geltenden Anlage z.B. kurzlaufende Staatsanleihen."
                       />
                     </span>
                     <span className="kpi-value"> -- </span>
