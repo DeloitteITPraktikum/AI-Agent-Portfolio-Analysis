@@ -578,6 +578,7 @@
 .tooltip-wrapper:hover .tooltip-box {
   display: block;
 }
+
 /* ----------------------------------------
    Settings Page
 ----------------------------------------- */
@@ -841,9 +842,11 @@
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
+
   100% {
     opacity: 1;
   }
@@ -861,8 +864,317 @@
   .settings-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .settings-column {
     gap: 24px;
   }
+}
+
+
+/*Charts*/
+/* ______________________________________
+ * Kopfbereich der Chart-Karte
+ * ______________________________________ */
+.chart-card-header {
+  display: flex;
+  flex-direction: column;
+  /* Titel oben, Einstellungen darunter */
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chart-title-block h2 {
+  margin: 0;
+}
+
+.chart-subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* ______________________________________
+ * Gesamtbereich für Einstellungen
+ * ______________________________________ */
+/* ______________________________________
+ * Gesamtbereich für alle Chart-Filter (oben)
+ * ______________________________________ */
+.chart-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: -4px;
+}
+
+/* Hauptlayout: linke und rechte Spalte */
+.chart-controls-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Linke Spalte: FRW + Datum untereinander */
+.chart-controls-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 2;
+  /* nimmt mehr Platz ein */
+}
+
+/* Rechte Spalte: vier Dropdowns untereinander rechts */
+.chart-controls-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1.2;
+  /* etwas schmaler als links */
+  max-width: 340px;
+  /* verhindert, dass die Spalte zu breit wird */
+}
+
+
+/* Obere Zeile: links Frequenz & Rolling Window, rechts Datum */
+.chart-controls-top {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* Untere Zeile: Währung / Benchmark / Index-Typ / Risikofreie Rendite */
+.chart-controls-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: -2px;
+}
+
+/* ______________________________________
+ * Gemeinsame Basis für einzelne Controls
+ * ______________________________________ */
+.chart-control {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.chart-control label {
+  margin-bottom: 4px;
+}
+
+.chart-control select {
+  min-width: 180px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 12px;
+  color: #0f172a;
+  outline: none;
+}
+
+.chart-control select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+}
+
+/* ______________________________________
+ * Datums-Block (Start- und Enddatum)
+ * ______________________________________ */
+.chart-control-date {
+  min-width: 260px;
+  flex: 1;
+  /* nimmt weniger Breite als FRW ein */
+  margin-top: -2px;
+  /* leichte optische Ausrichtung nach oben */
+}
+
+.chart-control-main-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.chart-date-row {
+  display: flex;
+  gap: 8px;
+}
+
+.chart-date-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.chart-date-field label {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.chart-date-field input[type="date"] {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 12px;
+  color: #0f172a89;
+  outline: none;
+}
+
+.chart-date-field input[type="date"]:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+}
+
+/* ______________________________________
+ * Block für Frequenz & Rolling Window
+ * ______________________________________ */
+.chart-control-frw {
+  min-width: 360px;
+  flex: 2;
+  /* nimmt mehr Breite als Datum ein */
+  margin-top: -2px;
+}
+
+/* Umschalter Frei wählbar / Empfohlene Kombinationen */
+.chart-frw-mode-toggle {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  margin: 0 0 8px;
+}
+
+.chart-frw-mode-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.chart-frw-mode-btn.is-active {
+  background-color: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
+}
+
+/* Bereich direkt unter dem Toggle (frei / empfohlen) */
+.chart-frw-body {
+  margin-top: 8px;
+  min-height: 150px;
+  /* feste Mindesthöhe → kein „Springen“ beim Umschalten */
+  display: flex;
+}
+
+/* Karte für den Modus „Frei wählbar“ */
+.chart-frw-card {
+  border-radius: 16px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  padding: 12px 14px;
+  flex: 1;
+  /* füllt den gesamten Body-Bereich aus */
+}
+
+.chart-frw-row {
+  display: flex;
+  gap: 8px;
+}
+
+.chart-frw-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.chart-frw-field label {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.chart-frw-field select,
+.chart-frw-field input[type="number"] {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 12px;
+  color: #0f172a;
+  outline: none;
+}
+
+.chart-frw-field select:focus,
+.chart-frw-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+}
+
+/* Hinweistext unter dem Rolling-Window-Feld */
+.chart-hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* Fehlermeldung bei ungültigem Rolling Window */
+.chart-error {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #dc2626;
+}
+
+/* ______________________________________
+ * Preset-Karten (empfohlene Kombinationen)
+ * ______________________________________ */
+.chart-frw-presets {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  flex: 1;
+  /* füllt den Body-Bereich */
+  align-items: stretch;
+  /* alle Karten gleich hoch */
+}
+
+.chart-frw-preset-btn {
+  flex: 1 0 150px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 11px;
+  color: #0f172a;
+  min-height: 88px;
+}
+
+.chart-frw-preset-btn.is-active {
+  border-color: #2563eb;
+  background-color: #eff6ff;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+}
+
+.chart-frw-preset-title {
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.chart-frw-preset-desc {
+  color: #64748b;
+}
+
+.chart-frw-preset-hint {
+  color: #94a3b8;
+  margin-top: 2px;
 }
