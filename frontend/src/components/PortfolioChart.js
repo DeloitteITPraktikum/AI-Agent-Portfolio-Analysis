@@ -78,7 +78,7 @@ const PortfolioChart = () => {
                     }
                     onClick={() => setActiveChart("verlauf")}
                 >
-                    Portfolio Verlauf
+                    Portfolio vs. Benchmark
                 </button>
 
                 <button
@@ -176,7 +176,7 @@ const PortfolioChart = () => {
       ------------------------------ */}
             {activeChart === "verlauf" && (
                 <div className="single-chart-container">
-                    <h3 className="chart-section-title">Portfolio Verlauf</h3>
+                    <h3 className="chart-section-title">Portfolio vs. Benchmark</h3>
 
                     <ResponsiveContainer width="100%" height={260}>
                         <LineChart

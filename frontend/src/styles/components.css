@@ -1259,3 +1259,42 @@
   gap: 12px;
   margin-top: 20px;
 }
+
+/* Zeile mit Ticker + Zeitraum */
+.kursdaten-controls-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* Einzelnes Steuerungsfeld */
+.kursdaten-control {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label über Input/Select */
+.kursdaten-label {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+/* Gemeinsame Optik für Eingabe und Select */
+.kursdaten-input,
+.kursdaten-select {
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  padding: 6px 14px;
+  font-size: 14px;
+  outline: none;
+}
+
+.kursdaten-input:focus,
+.kursdaten-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+}

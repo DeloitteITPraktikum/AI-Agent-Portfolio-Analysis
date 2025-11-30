@@ -9,6 +9,9 @@ import SettingsPage from "./pages/SettingsPage";
 import CsvUpload from "./components/CsvUpload";
 import { useEffect, useState } from "react";
 import PortfolioChart from "./components/PortfolioChart";
+import KursdatenPage from "./pages/KursdatenPage";
+
+
 
 // Tooltip-Komponente importieren
 import InfoTooltip from "./components/InfoToolTip";
@@ -82,6 +85,7 @@ function App() {
   const [chartEndDate, setChartEndDate] = useState("");
   const [dateError, setDateError] = useState("");
   const [settingsChanged, setSettingsChanged] = useState(false);
+
 
   // Rolling-Window-Logik
   const [rollingWindow, setRollingWindow] = useState(
@@ -337,6 +341,25 @@ function App() {
                 </button>
               </div>
 
+              {/*Kursdaten*/}
+              <div className="nav-section">
+                <button
+                  type="button"
+                  className={
+                    "nav-header nav-header-single " +
+                    (activePage === "kursdaten" ? "active" : "")
+                  }
+                  onClick={() => setActivePage("kursdaten")}
+                >
+                  <span className="nav-left">
+                    <span className="nav-icon">
+                      <img src="/img/icons/analytics.png" alt="" />
+                    </span>
+                    <span className="nav-label">Kursdaten</span>
+                  </span>
+                </button>
+              </div>
+
               {/* Reports */}
               <div className="nav-section">
                 <button
@@ -355,6 +378,9 @@ function App() {
                   </span>
                 </button>
               </div>
+
+
+
 
               {/* Einstellungen */}
               <div className="nav-section">
@@ -378,6 +404,7 @@ function App() {
               </div>
             </nav>
           </aside>
+
 
           {/* Hauptbereich */}
           <main className="main">
@@ -458,12 +485,10 @@ function App() {
                   </div>
                 </div>
                 {/* ------------------------------------------------------------ */}
+
+
                 {/* Dashboard-Grid */}
                 <section className="dashboard-grid">
-
-
-
-
 
                   {/* Chart */}
                   <div className="card chart-card">
@@ -745,11 +770,16 @@ function App() {
             {/* KI Agent Seite */}
             {activePage === "agent" && <KIAgentPage />}
 
+            {activePage === "kursdaten" && <KursdatenPage />}
+
             {/* Reports Seite */}
             {activePage === "reports" && <ReportsPage />}
 
             {/* Settings Seite */}
             {activePage === "settings" && <SettingsPage />}
+
+
+
           </main >
         </div >
       </ToastContext.Provider >
