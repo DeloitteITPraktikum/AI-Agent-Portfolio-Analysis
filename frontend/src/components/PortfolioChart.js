@@ -8,39 +8,40 @@ import {
     YAxis,
     Tooltip,
     CartesianGrid,
+    ScatterChart,
+    Scatter,
+    Legend,
+    ReferenceLine,
 } from "recharts";
 
 const PortfolioChart = () => {
     const { portfolioData } = useData();
-    // Hinweis: portfolioData wird hier aktuell noch nicht benutzt.
-    // Später kannst du es je nach activeChart für echte Auswertungen verwenden.
 
-    // -------------------------------------------------------------
-    // State: Welcher Chart soll aktuell angezeigt werden?
-    // Mögliche Werte: "riskReturn", "verlauf", "rolling"
-    // -------------------------------------------------------------
+    // welcher Chart aktiv ist
     const [activeChart, setActiveChart] = useState("riskReturn");
 
-    // -------------------------------------------------------------
-    // Demo-Daten für die drei verschiedenen Chart-Typen
-    // (Platzhalter – später durch echte Daten ersetzen)
-    // -------------------------------------------------------------
-    const demoRiskReturnData = [
-        { name: "Jan", value: 8 },
-        { name: "Feb", value: 10 },
-        { name: "Mär", value: 7 },
-        { name: "Apr", value: 11 },
-        { name: "Mai", value: 9 },
-    ];
+    // -----------------------------
+    // Demo-Daten für Risk-Return
+    // -----------------------------
+    const riskFreeRate = 0.02;
 
+    const demoRiskReturnPortfolio = [{ vol: 0.10, ret: 0.13 }];
+    const demoRiskReturnBenchmark = [{ vol: 0.05, ret: 0.06 }];
+
+    // -----------------------------
+    // Demo-Daten für Portfolio Verlauf (ZWEI Linien)
+    // -----------------------------
     const demoVerlaufData = [
-        { name: "Jan", value: 100 },
-        { name: "Feb", value: 120 },
-        { name: "Mär", value: 90 },
-        { name: "Apr", value: 130 },
-        { name: "Mai", value: 150 },
+        { date: "Jan", portfolio: 0.10, benchmark: 0.06 },
+        { date: "Feb", portfolio: 0.12, benchmark: 0.05 },
+        { date: "Mär", portfolio: 0.09, benchmark: 0.07 },
+        { date: "Apr", portfolio: 0.13, benchmark: 0.06 },
+        { date: "Mai", portfolio: 0.15, benchmark: 0.08 },
     ];
 
+    // -----------------------------
+    // Demo-Daten für Rolling Vol
+    // -----------------------------
     const demoRollingData = [
         { name: "Jan", value: 20 },
         { name: "Feb", value: 18 },
@@ -49,43 +50,13 @@ const PortfolioChart = () => {
         { name: "Mai", value: 19 },
     ];
 
-    // -------------------------------------------------------------
-    // Hilfsfunktion: Bestimmen, welche Daten und welcher Titel
-    // für den aktuell aktiven Chart verwendet werden sollen.
-    // -------------------------------------------------------------
-    const getActiveChartConfig = () => {
-        switch (activeChart) {
-            case "riskReturn":
-                return {
-                    title: "Risk-Return-Scatterplot",
-                    data: demoRiskReturnData,
-                };
-            case "verlauf":
-                return {
-                    title: "Portfolio Verlauf",
-                    data: demoVerlaufData,
-                };
-            case "rolling":
-                return {
-                    title: "Rolling Volatility",
-                    data: demoRollingData,
-                };
-            default:
-                return {
-                    title: "Risk-Return-Scatterplot",
-                    data: demoRiskReturnData,
-                };
-        }
-    };
-
-    const { title, data } = getActiveChartConfig();
+    const percentFormatter = (value) => `${(value * 100).toFixed(0)} %`;
 
     return (
         <div className="chart-wrapper">
-            {/* ---------------------------------------------
-          Tab-Leiste: Auswahl, welcher Chart angezeigt wird
-         ---------------------------------------------- */}
-            <div className="chart-tab-row">
+
+            {/* Tabs OBEN */}
+            <div className="chart-tab-row" style={{ marginBottom: "18px" }}>
                 <button
                     type="button"
                     className={
@@ -123,33 +94,198 @@ const PortfolioChart = () => {
                 </button>
             </div>
 
-            {/* ---------------------------------------------
-          Aktuell ausgewählter Chart (immer nur EINER)
-         ---------------------------------------------- */}
-            <div className="single-chart-container">
-                <div className="chart-title-row">
-                    <h3 className="chart-section-title">{title}</h3>
-                </div>
+            {/* -----------------------------
+          1️⃣ Risk-Return Scatterplot
+      ------------------------------ */}
+            {activeChart === "riskReturn" && (
+                <div className="single-chart-container">
+                    <h3 className="chart-section-title">Risk-Return-Scatterplot</h3>
 
-                <ResponsiveContainer width="100%" height={260}>
-                    <LineChart
-                        data={data}
-                        margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Line
-                            type="monotone"
-                            dataKey="value"
-                            stroke="#2563eb"
-                            strokeWidth={2}
-                            dot={false}
-                        />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
+                    <ResponsiveContainer width="100%" height={260}>
+                        <ScatterChart margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+
+                            <XAxis
+                                type="number"
+                                dataKey="vol"
+                                domain={[0, 0.15]}
+                                tickFormatter={percentFormatter}
+                                name="Volatilität"
+                                tick={{ fontSize: 12 }} // kleinere Ticks
+                                label={{
+                                    value: "Volatilität (%)",
+                                    position: "insideRight",
+                                    offset: 25,           // Abstand nach unten
+                                    style: { fontSize: 11 },
+                                }}
+                            />
+
+
+                            <YAxis
+                                type="number"
+                                dataKey="ret"
+                                domain={[0, 0.15]}
+                                tickFormatter={percentFormatter}
+                                name="Rendite"
+                                tick={{ fontSize: 12 }}
+                                label={{
+                                    value: "Rendite (%)",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                    dy: -25,
+                                    style: { fontSize: 11, fontWeight: 500 },
+                                }}
+                            />
+
+
+
+                            <Tooltip formatter={(value) => percentFormatter(value)} />
+                            <Legend />
+
+                            <Scatter
+                                name="Portfolio"
+                                data={demoRiskReturnPortfolio}
+                                fill="#2563eb"
+                            />
+                            <Scatter
+                                name="Benchmark"
+                                data={demoRiskReturnBenchmark}
+                                fill="#9ca3af"
+                            />
+
+                            <ReferenceLine
+                                y={riskFreeRate}
+                                stroke="#60a5fa"
+                                strokeDasharray="4 4"
+                                label={{
+                                    value: `Risikofreie Rendite (${percentFormatter(
+                                        riskFreeRate
+                                    )})`,
+                                    position: "insideBottomLeft",
+                                    fill: "#60a5fa",
+                                    fontSize: 12,
+                                }}
+                            />
+                        </ScatterChart>
+                    </ResponsiveContainer>
+                </div>
+            )}
+
+            {/* -----------------------------
+          2️⃣ Portfolio Verlauf (Zwei Linien)
+      ------------------------------ */}
+            {activeChart === "verlauf" && (
+                <div className="single-chart-container">
+                    <h3 className="chart-section-title">Portfolio Verlauf</h3>
+
+                    <ResponsiveContainer width="100%" height={260}>
+                        <LineChart
+                            data={demoVerlaufData}
+                            margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+
+                            <XAxis
+                                dataKey="date"
+                                tick={{ fontSize: 12 }}
+                                label={{
+                                    value: "Zeit",
+                                    position: "insideRight",   // unterhalb der Achse
+                                    offset: 15,
+                                    style: { fontSize: 11 },
+                                }}
+                            />
+
+                            <YAxis
+                                tickFormatter={percentFormatter}
+                                tick={{ fontSize: 12 }}
+                                label={{
+                                    value: "Rendite (%)",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                    dy: -25,                          // weiter nach oben schieben
+                                    style: { fontSize: 11, fontWeight: 500 },
+                                }}
+                            />
+
+
+
+
+
+                            <Tooltip formatter={(v) => percentFormatter(v)} />
+                            <Legend />
+
+                            {/* Portfolio-Linie */}
+                            <Line
+                                name="Portfolio"
+                                type="monotone"
+                                dataKey="portfolio"
+                                stroke="#2563eb"
+                                strokeWidth={2}
+                                dot={false}
+                            />
+
+                            {/* Benchmark-Linie */}
+                            <Line
+                                name="Benchmark"
+                                type="monotone"
+                                dataKey="benchmark"
+                                stroke="#9ca3af"
+                                strokeWidth={2}
+                                dot={false}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+            )}
+
+            {/* -----------------------------
+          3️⃣ Rolling Volatility
+      ------------------------------ */}
+            {activeChart === "rolling" && (
+                <div className="single-chart-container">
+                    <h3 className="chart-section-title">Rolling Volatility</h3>
+
+                    <ResponsiveContainer width="100%" height={260}>
+                        <LineChart
+                            data={demoRollingData}
+                            margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                                dataKey="name"
+                                tick={{ fontSize: 12 }}
+                                label={{
+                                    value: "Zeit",
+                                    position: "insideRight",
+                                    offset: 20,
+                                    style: { fontSize: 11 },
+                                }}
+                            />
+
+                            <YAxis
+                                tick={{ fontSize: 12 }}
+                                label={{
+                                    value: "Volatilität (%)",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                    dy: -25,
+                                    style: { fontSize: 11, fontWeight: 500 },
+                                }}
+                            />
+
+                            <Tooltip />
+                            <Line
+                                type="monotone"
+                                dataKey="value"
+                                stroke="#2563eb"
+                                strokeWidth={2}
+                                dot={false}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+            )}
         </div>
     );
 };
