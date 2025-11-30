@@ -80,6 +80,9 @@ function App() {
   const [chartRiskFree, setChartRiskFree] = useState("3m_tbill");
   const [chartStartDate, setChartStartDate] = useState(""); // Startdatum des Betrachtungszeitraums
   const [chartEndDate, setChartEndDate] = useState("");
+  const [dateError, setDateError] = useState("");
+  const [settingsChanged, setSettingsChanged] = useState(false);
+
   // Rolling-Window-Logik
   const [rollingWindow, setRollingWindow] = useState(
     ROLLING_CONFIG.daily.standard
@@ -90,6 +93,53 @@ function App() {
   const [selectedPreset, setSelectedPreset] = useState("short");
 
   // ------------------------------------------
+
+  // ---- Validierung für Start- und Enddatum (kein Datum in der Zukunft, Enddatum nach Startdatum) ----
+
+
+  // -------------------------------------------------------------
+  const parseLocalDate = (value) => {
+    if (!value) return null;
+
+    // Browser gibt yyyy-mm-dd zurück → manuell in lokales Datum umwandeln
+    const [year, month, day] = value.split("-").map(Number);
+
+    // Monat -1 weil JS Monate 0–11 sind
+    const d = new Date(year, month - 1, day);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  };
+
+  const validateDateRange = (startValue, endValue) => {
+    // Heutiges lokales Datum erstellen (Mitternacht)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Eingabedaten korrekt als lokales Datum parsen
+    const start = startValue ? parseLocalDate(startValue) : null;
+    const end = endValue ? parseLocalDate(endValue) : null;
+
+    // Startdatum nicht in der Zukunft
+    if (start && start > today) {
+      setDateError("Das Startdatum darf nicht in der Zukunft liegen.");
+      return;
+    }
+
+    // Enddatum nicht in der Zukunft
+    if (end && end > today) {
+      setDateError("Das Enddatum darf nicht in der Zukunft liegen.");
+      return;
+    }
+
+    // Enddatum muss nach dem Startdatum liegen
+    if (start && end && end <= start) {
+      setDateError("Das Enddatum muss nach dem Startdatum liegen.");
+      return;
+    }
+
+    // Alles OK
+    setDateError("");
+  };
 
   // ---- Handler für Frequenzwechsel (passt Rolling Window an Mindestwert an) ----
   const handleFrequencyChange = (value) => {
@@ -138,6 +188,16 @@ function App() {
       setRollingError("");
     }
   };
+  const handleApplyChartSettings = () => {
+    if (rollingError || dateError) return;
+
+    setSettingsChanged(false);
+
+    // Zukunft: Chart hier neu berechnen
+  };
+
+
+
   // ---- Anwenden einer vordefinierten Kombination (Preset) ----
   const handlePresetApply = (presetKey) => {
     const preset = ROLLING_PRESETS[presetKey];
@@ -459,7 +519,11 @@ function App() {
                                       <select
                                         id="freq-select"
                                         value={chartFrequency}
-                                        onChange={(e) => handleFrequencyChange(e.target.value)}
+                                        onChange={(e) => {
+                                          handleFrequencyChange(e.target.value);
+                                          setSettingsChanged(true);
+                                        }}
+
                                       >
                                         <option value="daily">Täglich (Standard)</option>
                                         <option value="weekly">Wöchentlich</option>
@@ -481,7 +545,11 @@ function App() {
                                               type="number"
                                               min="1"
                                               value={rollingWindow}
-                                              onChange={handleRollingChange}
+                                              onChange={(e) => {
+                                                handleRollingChange(e);
+                                                setSettingsChanged(true);
+                                              }}
+
                                             />
                                             <small className="chart-hint">
                                               Mindestwert bei {cfg.label}: {cfg.min} {cfg.unitLabel}.
@@ -512,7 +580,7 @@ function App() {
                                         className={
                                           "chart-frw-preset-btn" + (isActive ? " is-active" : "")
                                         }
-                                        onClick={() => handlePresetApply(preset.key)}
+                                        onClick={() => { handlePresetApply(preset.key); setSettingsChanged(true); }}
                                       >
                                         <div className="chart-frw-preset-title">{preset.label}</div>
                                         <div className="chart-frw-preset-desc">
@@ -530,31 +598,51 @@ function App() {
                           </div>
 
                           {/* DATUM (bleibt unter FRW) */}
-                          <div className="chart-control chart-control-date">
+                          <div className="chart-control">
+                            {/* Hauptlabel für den Datumsbereich */}
                             <span className="chart-control-main-label">Datum</span>
+
+                            {/* Zeile mit Start- und Enddatum */}
                             <div className="chart-date-row">
 
+                              {/* Startdatum */}
                               <div className="chart-date-field">
                                 <label htmlFor="chart-startdate">Startdatum</label>
                                 <input
                                   id="chart-startdate"
                                   type="date"
                                   value={chartStartDate}
-                                  onChange={(e) => setChartStartDate(e.target.value)}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    // Startdatum speichern
+                                    setChartStartDate(value);
+                                    // Datumsbereich prüfen
+                                    validateDateRange(value, chartEndDate);
+                                    setSettingsChanged(true);
+                                  }}
                                 />
                               </div>
 
+                              {/* Enddatum */}
                               <div className="chart-date-field">
                                 <label htmlFor="chart-enddate">Enddatum</label>
                                 <input
                                   id="chart-enddate"
                                   type="date"
                                   value={chartEndDate}
-                                  onChange={(e) => setChartEndDate(e.target.value)}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    // Enddatum speichern
+                                    setChartEndDate(value);
+                                    // Datumsbereich prüfen
+                                    validateDateRange(chartStartDate, value);
+                                  }}
                                 />
                               </div>
-
                             </div>
+
+                            {/* Fehlermeldung bei ungültigem Datum */}
+                            {dateError && <div className="chart-error">{dateError}</div>}
                           </div>
 
                         </div>
@@ -567,7 +655,10 @@ function App() {
                             <select
                               id="currency-select"
                               value={chartCurrency}
-                              onChange={(e) => setChartCurrency(e.target.value)}
+                              onChange={(e) => {
+                                setChartCurrency(e.target.value); // Währung aktualisieren
+                                setSettingsChanged(true);
+                              }}
                             >
                               <option value="usd">US-Dollar (USD) (Standard)</option>
                               <option value="eur">Euro (EUR)</option>
@@ -579,7 +670,10 @@ function App() {
                             <select
                               id="benchmark-select"
                               value={chartBenchmark}
-                              onChange={(e) => setChartBenchmark(e.target.value)}
+                              onChange={(e) => {
+                                setChartBenchmark(e.target.value); // Benchmark aktualisieren
+                                setSettingsChanged(true);          // Änderung merken
+                              }}
                             >
                               <option value="sp500">S&amp;P 500 (Standard)</option>
                               <option value="msci_world">MSCI World</option>
@@ -591,7 +685,10 @@ function App() {
                             <select
                               id="index-type-select"
                               value={chartIndexType}
-                              onChange={(e) => setChartIndexType(e.target.value)}
+                              onChange={(e) => {
+                                setChartIndexType(e.target.value); // Index-Typ aktualisieren
+                                setSettingsChanged(true);          //  Änderung merken
+                              }}
                             >
                               <option value="tri">Total Return Index (Standard)</option>
                               <option value="price">Price Index</option>
@@ -603,12 +700,31 @@ function App() {
                             <select
                               id="riskfree-select"
                               value={chartRiskFree}
-                              onChange={(e) => setChartRiskFree(e.target.value)}
+                              onChange={(e) => {
+                                setChartRiskFree(e.target.value);
+                                setSettingsChanged(true);
+                              }}
+
                             >
                               <option value="3m_tbill">3M US T-Bill (Standard)</option>
                               <option value="1m_tbill">1M US T-Bill</option>
                               <option value="6m_tbill">6M US T-Bill</option>
                             </select>
+                            <button
+                              type="button"
+                              onClick={handleApplyChartSettings}
+                              disabled={!settingsChanged || rollingError || dateError}
+                              className={
+                                (!settingsChanged || rollingError || dateError)
+                                  ? "button-disabled apply-button"
+                                  : "button-active apply-button"
+                              }
+                            >
+                              Übernehmen
+                            </button>
+
+
+
                           </div>
 
                         </div>

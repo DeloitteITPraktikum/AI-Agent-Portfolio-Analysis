@@ -1178,3 +1178,41 @@
   color: #94a3b8;
   margin-top: 2px;
 }
+
+/* Grau = deaktiviert */
+.button-disabled {
+  background: #e2e8f0;
+  /* hellgrau */
+  color: #94a3b8;
+  /* dunkelgrau */
+  cursor: not-allowed;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  border: none;
+}
+
+/* Grün = aktiviert */
+.button-active {
+  background: #86bc25;
+  /* delovest grün */
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  border: none;
+  transition: background 0.2s;
+}
+
+.button-active:hover {
+  background: #72a820;
+}
+
+.apply-button {
+  margin-top: 14px;
+  align-self: flex-end;
+
+  width: 335px;
+
+}
