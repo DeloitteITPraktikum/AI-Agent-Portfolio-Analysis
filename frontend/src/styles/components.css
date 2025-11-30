@@ -1216,3 +1216,46 @@
   width: 335px;
 
 }
+
+.chart-tab-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.chart-tab {
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #0f172a;
+}
+
+.chart-tab-active {
+  background: #72a820;
+  color: #ffffff;
+  border-color: #72a820;
+}
+
+.single-chart-container {
+  border-radius: 24px;
+  background: #ffffff;
+  padding: 16px 20px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.chart-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.chart-tab-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
