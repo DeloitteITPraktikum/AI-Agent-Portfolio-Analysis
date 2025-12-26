@@ -10,9 +10,14 @@
 /* Sidebar links */
 .sidebar {
   width: 260px;
-  background-color: #0d0d0d;
+  background: rgba(13, 13, 13, 0.85);
+  /* Semi-transparent dark */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   color: #ffffff;
   padding: 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  /* Subtle border */
 }
 
 /* Hauptbereich rechts */
@@ -95,7 +100,8 @@
 }
 
 .nav-header:hover .nav-label {
-  color: #86bc25; /* Hover grün */
+  color: #86bc25;
+  /* Hover grün */
 }
 
 .nav-header-icon {
@@ -132,7 +138,8 @@
 }
 
 .nav-items a:hover {
-  color: #86bc25 !important; /* Hover grün */
+  color: #86bc25 !important;
+  /* Hover grün */
 }
 
 /* ------------------------------- */
@@ -154,10 +161,13 @@
 .hidden {
   display: none;
 }
+
 /* Aktives Menü - grüner Streifen links + Text grün */
 .nav-header.active {
-  background: rgba(134, 188, 37, 0.15);  /* leicht grünlicher Hintergrund */
-  color: #86bc25;                        /* dein DeloVest-Grün */
+  background: rgba(134, 188, 37, 0.15);
+  /* leicht grünlicher Hintergrund */
+  color: #86bc25;
+  /* dein DeloVest-Grün */
   font-weight: 600;
 }
 
@@ -172,16 +182,20 @@
 /* Grüner seitlicher Border */
 .nav-header.active {
   border-left: 4px solid #86bc25;
-  padding-left: 14px; /* wird optisch ausgeglichen */
+  padding-left: 14px;
+  /* wird optisch ausgeglichen */
 }
+
 /* --------------------------------------- */
 /*  KPI-Leiste modern / zentriert          */
 /* --------------------------------------- */
 
 .kpi-row {
   display: flex;
-  justify-content: center;      /* zentriert */
-  gap: 48px;                    /* Abstand zwischen KPIs */
+  justify-content: center;
+  /* zentriert */
+  gap: 48px;
+  /* Abstand zwischen KPIs */
   margin: 48px 0 32px;
   align-items: center;
 }
@@ -200,7 +214,8 @@
 .kpi-value {
   font-size: 24px;
   font-weight: 700;
-  color: #86bc25; /* DeloVest Grün */
+  color: #86bc25;
+  /* DeloVest Grün */
 }
 
 .kpi-divider {
@@ -209,3 +224,154 @@
   background-color: #e2e8f0;
 }
 
+
+/* --------------------------------------- */
+/*  Floating AI Command Bar (Pill)         */
+/* --------------------------------------- */
+
+.ai-command-bar-container {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Zentriert */
+  z-index: 1000;
+  width: 100%;
+  max-width: 700px;
+  padding: 0 20px;
+}
+
+.ai-command-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  /* Opaque white base */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  /* Pill Shape */
+
+  /* Stronger Shadow for "Pop" */
+  box-shadow:
+    0 10px 40px -10px rgba(0, 0, 0, 0.15),
+    /* Deep shadow */
+    0 0 0 1px rgba(0, 0, 0, 0.03),
+    /* Subtle border outline */
+    0 15px 35px -5px rgba(134, 188, 37, 0.15);
+  /* DeloVest Green Glow (Ambient) */
+
+  padding: 8px 8px 8px 24px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateY(0);
+}
+
+.ai-command-bar:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 50px -10px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(134, 188, 37, 0.2),
+    /* Green Border on Hover */
+    0 20px 40px -5px rgba(134, 188, 37, 0.25);
+  /* Stronger Green Glow */
+}
+
+.ai-command-bar:focus-within {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 40px -5px rgba(0, 0, 0, 0.15),
+    0 0 0 2px rgba(134, 188, 37, 0.3);
+  /* Leicht grüner Glow */
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.ai-command-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: #1e293b;
+  outline: none;
+  padding: 8px 0;
+  font-family: inherit;
+}
+
+.ai-command-input::placeholder {
+  color: #94a3b8;
+}
+
+.btn-ai-command {
+  background: #111111;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-ai-command:hover {
+  background: #86bc25;
+  /* DeloVest Grün */
+  transform: scale(1.05);
+}
+
+.btn-ai-command:active {
+  transform: scale(0.95);
+}
+
+
+.btn-ai-command img {
+  /* Default (Light Mode): Button is Black, Icon should be White */
+  filter: brightness(0) invert(1);
+  transition: filter 0.2s ease;
+}
+
+.btn-ai-command:hover img {
+  /* Hover (Green): Icon stays White */
+  filter: brightness(0) invert(1);
+}
+
+/* Dark Mode für Command Bar */
+body.dark-mode .ai-command-bar {
+  background: rgba(30, 30, 30, 0.85);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .ai-command-input {
+  color: #f1f5f9;
+}
+
+body.dark-mode .ai-command-bar:focus-within {
+  background: rgba(40, 40, 40, 0.95);
+  box-shadow:
+    0 20px 40px -5px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(134, 188, 37, 0.3);
+}
+
+body.dark-mode .btn-ai-command {
+  background: #ffffff;
+}
+
+/* Dark Mode: Button is White, Icon should be Black */
+body.dark-mode .btn-ai-command img {
+  filter: none;
+  /* Reset filter to show original black icon (assuming source is black or handle opacity) */
+  /* Actually, if source is black PNG/SVG: */
+  filter: brightness(0);
+}
+
+body.dark-mode .btn-ai-command:hover {
+  background: #86bc25;
+}
+
+body.dark-mode .btn-ai-command:hover img {
+  /* White on Green */
+  filter: brightness(0) invert(1);
+}

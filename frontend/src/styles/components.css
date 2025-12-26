@@ -798,8 +798,105 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 15px;
-  letter-spacing: 0.5px;
+}
+
+/* ----------------------------------------
+   AI Teaser Card (Dashboard) - Premium Dark
+----------------------------------------- */
+.ai-teaser-card {
+  grid-column: span 3;
+  background: #0d0d0d;
+  /* Matches Sidebar */
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #1f1f1f;
+}
+
+/* Subtle green accent glow, no blue */
+.ai-teaser-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(134, 188, 37, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ai-teaser-content h3 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.ai-teaser-content p {
+  margin: 0;
+  color: #9ca3af;
+  /* Neutral gray */
+  font-size: 14px;
+  max-width: 600px;
+}
+
+.ai-input-wrapper {
+  display: flex;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+  align-items: center;
+}
+
+.ai-dashboard-input {
+  flex: 1;
+  background: #1a1a1a;
+  /* Neutral dark gray */
+  border: 1px solid #333333;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.ai-dashboard-input::placeholder {
+  color: #6b7280;
+}
+
+.ai-dashboard-input:focus {
+  background: #1a1a1a;
+  border-color: #86bc25;
+  /* Green focus */
+  box-shadow: 0 0 0 1px rgba(134, 188, 37, 0.3);
+}
+
+.btn-ai-action {
+  background: #86bc25;
+  color: #ffffff;
+  border: none;
+  padding: 0 20px;
+  height: 42px;
+  /* Match input height */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-ai-action:hover {
+  background: #7aa921;
+  transform: translateY(-1px);
 }
 
 .btn-secondary:hover {

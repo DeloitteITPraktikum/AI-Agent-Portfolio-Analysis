@@ -1,0 +1,25 @@
+resources:
+  - type: job
+    key: job
+    name: SaveCSVFromApp
+    permission: can-manage
+
+  - type: volume
+    key: uploads_volume
+    path: /Volumes/tud_25/delovest_data/uploads
+    permission: can-read-and-write
+
+  - type: serving-endpoint
+    key: serving-endpoint-2
+    name: delovest_agent
+    permission: can-query
+
+env:
+  - name: JOB_ID
+    valueFrom: job
+
+  - name: REACT_APP_VOLUME_PATH
+    value: "/Volumes/tud_25/delovest_data/uploads"
+
+# Startet FastAPI + React-Serving
+command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

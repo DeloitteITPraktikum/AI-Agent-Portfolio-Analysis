@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
+import "../styles/chat.css";
 
 function UserAvatarIcon({ size = 32 }) {
   return (
@@ -44,12 +49,67 @@ function AgentAvatarIcon({ size = 32 }) {
   );
 }
 
-function KIAgentPage() {
+// Helper to normalize LaTeX delimiters
+const preprocessContentForMarkdown = (content) => {
+  if (!content) return "";
+  return content
+    .replace(/\\\[/g, "$$")
+    .replace(/\\\]/g, "$$")
+    .replace(/\\\(/g, "$")
+    .replace(/\\\)/g, "$");
+};
+
+function Typewriter({ content, onComplete }) {
+  const [displayedContent, setDisplayedContent] = useState("");
+  const indexRef = useRef(0);
+
+  useEffect(() => {
+    // Reset if content changes unexpectedly
+    setDisplayedContent("");
+    indexRef.current = 0;
+  }, [content]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDisplayedContent((prev) => {
+        if (indexRef.current >= content.length) {
+          clearInterval(interval);
+          if (onComplete) onComplete();
+          return prev;
+        }
+        const nextChar = content.charAt(indexRef.current);
+        indexRef.current++;
+        return prev + nextChar;
+      });
+    }, 15); // Speed: 15ms per character
+
+    return () => clearInterval(interval);
+  }, [content, onComplete]);
+
+  // Preprocess for display
+  const cleaned = preprocessContentForMarkdown(displayedContent);
+
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkMath]}
+      rehypePlugins={[rehypeKatex]}
+    // Remove the custom 'p' component that was stripping margins.
+    // Let our CSS handle the spacing.
+    >
+      {cleaned}
+    </ReactMarkdown>
+  );
+}
+
+function KIAgentPage({ initialInput = "" }) {
   const STORAGE_KEY = "ki-agent-conversations";
 
   const [conversations, setConversations] = useState([]);
   const [activeId, setActiveId] = useState(null);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(initialInput); // Initialize with prop
+
+  // Track if we have already auto-sent to prevent double sending on re-renders
+  const hasAutoSentRef = useRef(false);
 
   const messagesEndRef = useRef(null);
 
@@ -72,6 +132,7 @@ function KIAgentPage() {
     },
   ];
 
+  // Load Conversations
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -96,6 +157,18 @@ function KIAgentPage() {
     }
   }, []);
 
+  const activeConversation =
+    conversations.find((c) => c.id === activeId) || null;
+
+  // Auto-Send Logic
+  useEffect(() => {
+    if (initialInput && activeConversation && !hasAutoSentRef.current) {
+      hasAutoSentRef.current = true;
+      handleSend(initialInput);
+    }
+  }, [initialInput, activeConversation]);
+
+
   // Chats in localStorage speichern
   useEffect(() => {
     if (conversations.length > 0) {
@@ -109,8 +182,6 @@ function KIAgentPage() {
     }
   }, [conversations, activeId]);
 
-  const activeConversation =
-    conversations.find((c) => c.id === activeId) || null;
 
   const handleNewChat = () => {
     const newConv = {
@@ -149,12 +220,15 @@ function KIAgentPage() {
     });
   };
 
-  // >>>>>>>>>>>>>>>  自动命名逻辑已整合在这里  <<<<<<<<<<<<<<<<
-  const handleSend = () => {
-    if (!input.trim() || !activeConversation) return;
+  // >>>>>>>>>>>>>>>  Real Backend Connection  <<<<<<<<<<<<<<<<
+  // Modified to accept optional explicit content override (for auto-send)
+  const handleSend = async (overrideContent) => {
+    // If overrideContent is present, use it. Otherwise use input state.
+    const textToSend = typeof overrideContent === 'string' ? overrideContent : input;
 
-    const firstUserMessage = input.trim();
+    if (!textToSend.trim() || !activeConversation) return;
 
+    const firstUserMessage = textToSend.trim();
     const userMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -162,14 +236,7 @@ function KIAgentPage() {
       createdAt: new Date().toISOString(),
     };
 
-    const fakeReply = {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      content:
-        "Dies ist eine Beispielantwort. Hier wird später die echte Antwort des KI-Agents angezeigt.",
-      createdAt: new Date().toISOString(),
-    };
-
+    // 1. Optimistic UI update: Show user message immediately
     setConversations((prev) =>
       prev.map((conv) => {
         if (conv.id !== activeConversation.id) return conv;
@@ -187,14 +254,75 @@ function KIAgentPage() {
         return {
           ...conv,
           title: newTitle,
-          messages: [...conv.messages, userMessage, fakeReply],
+          messages: [...conv.messages, userMessage],
         };
       })
     );
 
-    setInput("");
+    setInput(""); // Clear input
+
+    // 2. Prepare payload (send relevant history + new message)
+    // We send the entire history of the current conversation to give context
+    const currentMessages = activeConversation.messages;
+    const apiPayload = [
+      ...currentMessages.map(m => ({ role: m.role, content: m.content })),
+      { role: "user", content: firstUserMessage }
+    ];
+
+    try {
+      const response = await fetch("/api/v1/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiPayload })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Fehler: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // 3. Update UI with real agent response
+      const agentMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: data.content, // Expecting { role: "assistant", content: "..." }
+        createdAt: new Date().toISOString(),
+        animate: true,
+      };
+
+      setConversations((prev) =>
+        prev.map((conv) => {
+          if (conv.id !== activeConversation.id) return conv;
+          return {
+            ...conv,
+            messages: [...conv.messages, agentMessage],
+          };
+        })
+      );
+
+    } catch (error) {
+      console.error("Chat Error:", error);
+      // Add error message to chat
+      const errorMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: "Entschuldigung, es gab einen Fehler bei der Kommunikation mit dem KI-Agenten.",
+        createdAt: new Date().toISOString(),
+      };
+
+      setConversations((prev) =>
+        prev.map((conv) => {
+          if (conv.id !== activeConversation.id) return conv;
+          return {
+            ...conv,
+            messages: [...conv.messages, errorMessage],
+          };
+        })
+      );
+    }
   };
-  // >>>>>>>>>>>>>>>  handleSend 结束  <<<<<<<<<<<<<<<<
+  // >>>>>>>>>>>>>>>  handleSend End  <<<<<<<<<<<<<<<<
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -209,278 +337,156 @@ function KIAgentPage() {
     input.trim() === "";
 
   return (
-    <section className="page-section" style={{ marginTop: "40px" }}>
-      <h1>KI Agent</h1>
+    <div className="chat-layout">
+      {/* Linke Spalte: Chat-Historie */}
+      <aside className="chat-sidebar">
+        <button className="btn-new-chat" onClick={handleNewChat}>
+          <span>+</span> Neuer Chat
+        </button>
 
-      <div
-        className="content-box"
-        style={{
-          display: "flex",
-          gap: "20px",
-          minHeight: "85vh",
-        }}
-      >
-        {/* Linke Spalte: Chat-Historie */}
-        <div
-          style={{
-            flexBasis: "30%",
-            maxWidth: "30%",
-            background: "#f7f7f8",
-            borderRight: "1px solid #e0e0e0",
-            padding: "10px",
-            overflowY: "auto",
-          }}
-        >
-          <button
-            onClick={handleNewChat}
-            style={{
-              width: "100%",
-              padding: "8px",
-              marginBottom: "10px",
-              cursor: "pointer",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-              background: "white",
-              fontSize: "13px",
-            }}
-          >
-            Neuer Chat +
-          </button>
-
+        <div className="chat-history-list">
           {conversations.map((conv) => (
             <div
               key={conv.id}
+              className={`history-item ${conv.id === activeId ? "active" : ""}`}
               onClick={() => setActiveId(conv.id)}
-              style={{
-                padding: "8px",
-                cursor: "pointer",
-                background: conv.id === activeId ? "#e6e6e7" : "transparent",
-                borderRadius: "8px",
-                marginBottom: "6px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "6px",
-              }}
             >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <strong style={{ fontSize: "13px" }}>
+              <div className="history-info">
+                <div className="history-title">
                   {conv.title || "Unbenannter Chat"}
-                </strong>
-                <div style={{ fontSize: "10px", color: "#777" }}>
-                  {new Date(conv.createdAt).toLocaleString()}
+                </div>
+                <div className="history-date">
+                  {new Date(conv.createdAt).toLocaleDateString()}
                 </div>
               </div>
 
               <button
+                className="btn-delete-chat"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDeleteConversation(conv.id);
                 }}
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  color: "#999",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                }}
+                title="Chat löschen"
               >
                 ✕
               </button>
             </div>
           ))}
         </div>
+      </aside>
 
-        {/* Rechte Spalte: Chat-Bereich */}
-        <div
-          style={{
-            flexBasis: "70%",
-            maxWidth: "70%",
-            display: "flex",
-            flexDirection: "column",
-            paddingTop: "20px",
-          }}
-        >
-          {/* Nachrichtenliste inkl. Willkommensbereich */}
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              border: "1px solid#ddd",
-              padding: "14px",
-              marginBottom: "26px",
-              borderRadius: "10px",
-              background: "white",
-            }}
-          >
-            {showWelcome ? (
-              <div
-                style={{
-                  background: "#fafafa",
-                  borderRadius: "10px",
-                  padding: "16px",
-                  border: "1px solid #eee",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "10px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <AgentAvatarIcon size={32} />
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      lineHeight: "1.4",
-                      color: "#333",
-                    }}
-                  >
-                    Willkommen beim KI Agent für Portfolio-Analysen. Stell mir
-                    eine Frage oder wähle einen Vorschlag unten.
-                  </div>
-                </div>
-
-                <div style={{ marginLeft: "42px", fontSize: "13px" }}>
-                  <div style={{ fontWeight: 600, marginBottom: "4px" }}>
-                    Häufige Fragen:
-                  </div>
-                  <ul style={{ paddingLeft: "16px", margin: 0 }}>
-                    <li>Wie hoch ist das Risiko meines Portfolios?</li>
-                    <li>
-                      Bitte interpretiere die wichtigsten Kennzahlen meines
-                      Portfolios.
-                    </li>
-                    <li>
-                      Welche Strategie-Empfehlungen hast du für dieses
-                      Portfolio?
-                    </li>
-                    <li>
-                      Erkläre mir Rendite, Volatilität und Sharpe Ratio in
-                      einfachen Worten.
-                    </li>
-                  </ul>
-                </div>
+      {/* Rechte Spalte: Hauptbereich */}
+      <main className="chat-main">
+        {/* Nachrichtenliste */}
+        <div className="chat-messages-container">
+          {showWelcome ? (
+            <div className="welcome-container">
+              <div className="welcome-icon">
+                <AgentAvatarIcon size={64} />
               </div>
-            ) : activeConversation && activeConversation.messages.length > 0 ? (
-              activeConversation.messages.map((msg) => {
-                const isUser = msg.role === "user";
-                return (
-                  <div
-                    key={msg.id}
-                    style={{
-                      display: "flex",
-                      flexDirection: isUser ? "row-reverse" : "row",
-                      alignItems: "flex-start",
-                      gap: "8px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <div>
-                      {isUser ? (
-                        <UserAvatarIcon size={32} />
-                      ) : (
-                        <AgentAvatarIcon size={32} />
-                      )}
-                    </div>
+              <h3>Willkommen bei DeloVest AI</h3>
+              <p className="welcome-text">
+                Ich bin Ihr persönlicher Analyst. Stellen Sie mir Fragen zu Ihrem
+                Portfolio, Risiken oder Strategien.
+              </p>
 
-                    <div
-                      style={{
-                        display: "inline-block",
-                        padding: "8px 12px",
-                        borderRadius: "10px",
-                        background: isUser ? "#007bff" : "#f3f3f3",
-                        color: isUser ? "white" : "#111",
-                        maxWidth: "80%",
-                        fontSize: "14px",
-                        lineHeight: "1.4",
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      {msg.content}
-                    </div>
+              <div className="welcome-faq">
+                <h4>Vorschläge</h4>
+                <ul>
+                  <li>Wie hoch ist das Risiko meines Portfolios?</li>
+                  <li>Bitte interpretiere die wichtigsten Kennzahlen.</li>
+                  <li>Welche Strategie-Empfehlungen hast du?</li>
+                  <li>Erkläre mir Rendite und Volatilität.</li>
+                </ul>
+              </div>
+            </div>
+          ) : activeConversation && activeConversation.messages.length > 0 ? (
+            activeConversation.messages.map((msg, index) => {
+              const isUser = msg.role === "user";
+              const isLastMessage = index === activeConversation.messages.length - 1;
+              const cleanedContent = preprocessContentForMarkdown(msg.content);
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`message-row ${isUser ? "user-row" : "agent-row"}`}
+                >
+                  <div className={`avatar ${isUser ? "user-avatar" : "agent-avatar"}`}>
+                    {isUser ? <UserAvatarIcon size={20} /> : "D"}
                   </div>
-                );
-              })
-            ) : null}
-            <div ref={messagesEndRef} />
-          </div>
+                  <div className="bubble">
+                    {msg.animate ? (
+                      <Typewriter
+                        content={msg.content}
+                        onComplete={() => {
+                          // Update message to disable animation
+                          setConversations((prev) =>
+                            prev.map((c) => {
+                              if (c.id !== activeConversation.id) return c;
+                              return {
+                                ...c,
+                                messages: c.messages.map((m) =>
+                                  m.id === msg.id ? { ...m, animate: false } : m
+                                ),
+                              };
+                            })
+                          );
+                        }}
+                      />
+                    ) : (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkMath]}
+                        rehypePlugins={[rehypeKatex]}
+                      // Remove the custom 'p' component that was stripping margins.
+                      // Let our CSS handle the spacing.
+                      >
+                        {preprocessContentForMarkdown(msg.content)}
+                      </ReactMarkdown>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          ) : null}
+          <div ref={messagesEndRef} />
+        </div>
 
-          {/* Schnellbefehle */}
-          <div
-            style={{
-              marginBottom: "16px",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "10px",
-            }}
-          >
+        {/* Input Area */}
+        <div className="chat-input-area">
+          <div className="quick-prompts">
             {quickPrompts.map((p) => (
               <button
                 key={p.label}
+                className="prompt-chip"
                 onClick={() =>
                   setInput((prev) => (prev ? prev + " " + p.text : p.text))
                 }
-                style={{
-                  fontSize: "12px",
-                  padding: "6px 14px",
-                  borderRadius: "999px",
-                  border: "1px solid #d0d0d0",
-                  background: "#f8f8f8",
-                  cursor: "pointer",
-                }}
               >
                 {p.label}
               </button>
             ))}
           </div>
 
-          {/* Eingabebereich */}
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              alignItems: "flex-end",
-              paddingBottom: "8px",
-            }}
-          >
+          <div className="input-wrapper">
             <textarea
-              style={{
-                flex: 1,
-                resize: "none",
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                fontSize: "14px",
-              }}
-              rows={2}
-              placeholder="Gib hier deine Nachricht ein..."
+              className="chat-textarea"
+              rows={1}
+              placeholder="Stellen Sie eine Frage..."
               value={input}
               onKeyDown={handleKeyDown}
               onChange={(e) => setInput(e.target.value)}
-            ></textarea>
-
+            />
             <button
-              style={{
-                padding: "12px 22px",
-                borderRadius: "8px",
-                background: "#007bff",
-                color: "white",
-                cursor: "pointer",
-                fontSize: "14px",
-                border: "none",
-                whiteSpace: "nowrap",
-              }}
+              className="btn-submit"
               onClick={handleSend}
+              disabled={!input.trim()}
             >
               Senden
             </button>
           </div>
         </div>
-      </div>
-    </section>
+      </main >
+    </div >
   );
 }
 
